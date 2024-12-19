@@ -1,0 +1,150 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    color: #333;
+}
+
+/* Container for the overall content */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Logo container */
+.logo-container img {
+    max-width: 220px;
+    height: auto;
+    margin: 0 auto 20px;
+    display: block;
+}
+
+/* Main header */
+h1 {
+    font-size: 2.2rem;
+    text-align: center;
+    color: #005f8b;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 30px;
+}
+
+/* Sections for tooth selections */
+.tooth-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.tooth-group {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Tooth chart grid adjusted for 3 rows */
+.tooth-chart {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 8px;
+    justify-content: center;
+}
+
+/* Tooth button styles */
+.tooth {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #0077b6;
+    background: #e6f7ff;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tooth:hover {
+    transform: scale(1.1);
+    background: #0077b6;
+    color: white;
+}
+
+.tooth.selected {
+    background: #ff8300;
+    color: white;
+    border-color: #ff8300;
+}
+
+/* Output container for descriptions */
+.output-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    margin: 10px 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    font-weight: 500;
+    color: #444;
+}
+
+/* Description text for better visibility */
+.description-text {
+    flex: 1;
+    margin-right: 15px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* Copy button for descriptions */
+.copy-btn {
+    background: #0077b6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    background: #005f8b;
+}
+
+/* Centered actions section */
+.actions {
+    text-align: center;
+    margin-top: 30px;
+}
+
+button {
+    padding: 12px 24px;
+    font-size: 1.1em;
+    background: #0077b6;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #005f8b;
+    transform: scale(1.05);
+}
