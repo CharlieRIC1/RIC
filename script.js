@@ -6,35 +6,35 @@ const clearBtn = document.getElementById("clearBtn");
 
 // Mapping of tooth numbers to cleaned anatomical names (no "Upper" or "Lower")
 const toothNames = {
-    1: "Right Third Molar", 2: "Right Second Molar", 3: "Right First Molar",
-    4: "Right Second Premolar", 5: "Right First Premolar", 6: "Right Canine",
-    7: "Right Lateral Incisor", 8: "Right Central Incisor", 9: "Left Central Incisor",
-    10: "Left Lateral Incisor", 11: "Left Canine", 12: "Left First Premolar",
-    13: "Left Second Premolar", 14: "Left First Molar", 15: "Left Second Molar",
-    16: "Left Third Molar", 17: "Left Third Molar", 18: "Left Second Molar",
-    19: "Left First Molar", 20: "Left Second Premolar", 21: "Left First Premolar",
-    22: "Left Canine", 23: "Left Lateral Incisor", 24: "Left Central Incisor",
-    25: "Right Central Incisor", 26: "Right Lateral Incisor", 27: "Right Canine",
-    28: "Right First Premolar", 29: "Right Second Premolar", 30: "Right First Molar",
-    31: "Right Second Molar", 32: "Right Third Molar"
+    1: "right third molar", 2: "right second molar", 3: "right first molar",
+    4: "right second premolar", 5: "right first premolar", 6: "right canine",
+    7: "right lateral incisor", 8: "right central incisor", 9: "left central incisor",
+    10: "left lateral incisor", 11: "left canine", 12: "left first premolar",
+    13: "left second premolar", 14: "left first molar", 15: "left second molar",
+    16: "left third molar", 17: "left third molar", 18: "left second molar",
+    19: "left first molar", 20: "left second premolar", 21: "left first premolar",
+    22: "left canine", 23: "left lateral incisor", 24: "left central incisor",
+    25: "right central incisor", 26: "right lateral incisor", 27: "right canine",
+    28: "right first premolar", 29: "right second premolar", 30: "right first molar",
+    31: "right second molar", 32: "right third molar"
 };
 
 // Descriptors and sentence structures for Bone Graft and Excision/Curettage
 const graftingStructures = [
-    "In and on the defect of the {tooth}",
-    "On the crest and lateral ridge deficiency of the {tooth}",
-    "In the defect of the interalveolar septum of the {tooth}",
-    "In and on the deficiency of the {tooth}",
-    "In the deficiency of the {tooth}",
-    "On the alveolar jugum of the {tooth}"
+    "in and on the defect of the {tooth}",
+    "on the crest and lateral ridge deficiency of the {tooth}",
+    "in the defect of the interalveolar septum of the {tooth}",
+    "in and on the deficiency of the {tooth}",
+    "in the deficiency of the {tooth}",
+    "on the alveolar jugum of the {tooth}"
 ];
 
 const curettageStructures = [
-    "In the apex of the {tooth}",
-    "Apical to the {tooth}",
-    "Apical and lateral to the {tooth}",
-    "Medial to the apex of the {tooth}",
-    "Lateral to the apex of the {tooth}",
+    "in the apex of the {tooth}",
+    "apical to the {tooth}",
+    "apical and lateral to the {tooth}",
+    "medial to the apex of the {tooth}",
+    "lateral to the apex of the {tooth}",
     "{tooth} Apex"
 ];
 
@@ -77,10 +77,10 @@ function createDescriptionCard(tooth, type, container) {
     let descriptionText;
 
     if (type === "boneGraft") {
-        const structure = getRandomElement(graftingStructures, "On the crest of ridge defect near the {tooth}");
+        const structure = getRandomElement(graftingStructures, "on the crest of ridge defect near the {tooth}");
         descriptionText = structure.replace("{tooth}", toothName);
     } else if (type === "curettage") {
-        const structure = getRandomElement(curettageStructures, "Lateral to the apex of the {tooth}");
+        const structure = getRandomElement(curettageStructures, "lateral to the apex of the {tooth}");
         descriptionText = structure.replace("{tooth}", toothName);
     } else {
         descriptionText = `No valid description for ${toothName}`;
@@ -145,6 +145,6 @@ clearBtn.addEventListener("click", () => {
     previousDescriptions = {};
 });
 
-// Initialize tooth charts
+// initialize tooth charts
 createToothChart(boneGraftChart, "boneGraft", boneGraftOutput);
 createToothChart(curettageChart, "curettage", curettageOutput);
