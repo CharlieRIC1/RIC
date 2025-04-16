@@ -35,7 +35,7 @@ const curettageStructures = [
     "apical and lateral to the {tooth}",
     "medial to the apex of the {tooth}",
     "lateral to the apex of the {tooth}",
-    "{tooth} Apex"
+    "{tooth} apex"
 ];
 
 // Selected teeth
