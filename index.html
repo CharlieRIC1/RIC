@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bone Graft & Excision Description Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <img src="RIC-logo.png" alt="Regional Implant Centers Logo">
+    </div>
+
+    <div class="switch-container">
+      <label class="switch">
+        <input type="checkbox" id="toothPresentSwitch" checked>
+        <span class="slider"></span>
+      </label>
+      <span class="switch-label">Tooth Present</span>
+    </div>
+
+    <h1>Bone Graft & Excision Description Generator</h1>
+
+    <div class="tooth-section">
+      <div class="tooth-group">
+        <h2>Excision/Curettage Tooth Selection</h2>
+        <div id="curettageChart" class="tooth-chart"></div>
+        <h3>Excision/Curettage Descriptions</h3>
+        <div id="curettageOutput" class="output"></div>
+      </div>
+      <div class="tooth-group">
+        <h2>Bone Graft Tooth Selection</h2>
+        <div id="boneGraftChart" class="tooth-chart"></div>
+        <h3>Bone Graft Descriptions</h3>
+        <div id="boneGraftOutput" class="output"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="clearBtn">Clear All</button>
+    </div>
+
+    <!-- Legend Section Added Here -->
+    <div class="legend" style="margin-top: 30px; text-align: center;">
+      <h3>Legend</h3>
+      <div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #d0f0fd, #e0f7fa); border-radius: 8px; border: 1px solid #aaa;"></div>
+          <span>Tooth Present</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #ffd6d6, #ffe0e0); border-radius: 8px; border: 1px solid #aaa;"></div>
+          <span>No Tooth Present</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
