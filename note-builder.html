@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reconstructive Surgery Note Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="note.css">
+  <link rel="icon" type="image/png" href="implant.png">
+</head>
+<body>
+  <div id="loginGate" class="overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <img src="RIC-logo.png" alt="Regional Implant Centers Logo" class="logo">
+        <div>
+          <h2>Sign in to continue</h2>
+          <p class="muted">Demo-only authentication to keep notes private on this device.</p>
+        </div>
+      </div>
+      <form id="loginForm" class="grid two-col">
+        <label>Username<input type="text" id="loginUser" required autocomplete="username"></label>
+        <label>Password<input type="password" id="loginPass" required autocomplete="current-password"></label>
+        <div class="full-row">
+          <button type="submit" class="primary">Sign in</button>
+          <p class="muted">Use <strong>provider</strong> / <strong>care</strong> for demo access.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <header class="page-header">
+    <div class="brand">
+      <img src="RIC-logo.png" alt="Regional Implant Centers" class="logo">
+      <div>
+        <p class="eyebrow">Consult &amp; Operative Note</p>
+        <h1>Reconstructive Surgery Note Builder</h1>
+        <p class="muted">Collapsible sections, required field tracking, and printable output.</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a class="ghost" href="./">Back to app selection</a>
+      <button id="saveDraft" class="secondary">Save Draft</button>
+      <button id="printNote" class="primary">Print / Export</button>
+      <button id="logout" class="ghost">Logout</button>
+    </div>
+  </header>
+
+  <main id="app" class="app hidden">
+    <section class="grid two-col card">
+      <h2 class="full-row">Patient Snapshot</h2>
+      <label>Patient Name<input required id="patientName" placeholder="e.g., Joshua Dwayne Greer Woodard"></label>
+      <label>Date of Birth<input required id="patientDob" type="date"></label>
+      <label>Date of Service<input required id="dateOfService" type="date"></label>
+      <label>Time of Service<input required id="timeOfService" type="time"></label>
+      <label>MRN / ID<input required id="mrn" placeholder="Record number"></label>
+      <label>Location<input required id="location" placeholder="Street, City, State"></label>
+      <label>Referring Provider<input required id="referring" placeholder="Name"></label>
+      <label>Supervising Provider<select id="supervising" required>
+        <option value="">Select provider</option>
+        <option>Robert Gordon MD, ABIM, ABSA, NPI (20577388)</option>
+        <option>Gregory Carnevale MD, MBA, NPI (1689615924)</option>
+        <option>James Simriotis MD, Board Certified Sleep, NPI (2035026888)</option>
+      </select></label>
+    </section>
+
+    <section class="accordion" data-section="subjective">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 1</p>
+          <h3>Subjective</h3>
+          <p class="muted">Chief complaints, history, and symptoms.</p>
+        </div>
+        <div class="status" id="status-subjective">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <label>Chief Complaint<textarea id="chiefComplaint" required placeholder="Patient reports..."></textarea></label>
+          <label>History of Present Illness<textarea id="hpi" required placeholder="Duration, triggers, prior treatments..."></textarea></label>
+          <label>Past Surgical History<textarea id="psh" required></textarea></label>
+          <label>Symptoms<textarea id="symptoms" required></textarea></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="accordion" data-section="objective">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 2</p>
+          <h3>Objective</h3>
+          <p class="muted">Vitals, exam findings, diagnostics.</p>
+        </div>
+        <div class="status" id="status-objective">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <label>Vitals<textarea id="vitals" required placeholder="BP, HR, SpO2, BMI..."></textarea></label>
+          <label>Physical Exam<textarea id="exam" required></textarea></label>
+          <label>Imaging &amp; Diagnostics<textarea id="diagnostics" required></textarea></label>
+          <label>Functional Impact<textarea id="functional" required></textarea></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="accordion" data-section="assessment">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 3</p>
+          <h3>Assessment</h3>
+          <p class="muted">Narrative assessment and ICD/CPT context.</p>
+        </div>
+        <div class="status" id="status-assessment">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <label>Assessment Narrative<textarea id="assessment" required></textarea></label>
+          <label>Diagnoses / Codes<textarea id="diagnoses" required placeholder="e.g., Masticatory muscle pain (ICD10), CPT 99204"></textarea></label>
+          <label class="full-row">Medical Necessity<textarea id="necessity" required placeholder="Document functional impairment and rationale"></textarea></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="accordion" data-section="plan">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 4</p>
+          <h3>Plan</h3>
+          <p class="muted">Treatment plan, verification, and prognostic outlook.</p>
+        </div>
+        <div class="status" id="status-plan">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <label>Treatment Goals<textarea id="planGoals" required placeholder="Restore function, reduce pain..."></textarea></label>
+          <label>Treatment Steps<textarea id="planSteps" required placeholder="Bone grafting, implant placement..."></textarea></label>
+          <label>Treatment Verification<textarea id="planVerification" required placeholder="Discussed alternatives, patient consent..."></textarea></label>
+          <label>Prognosis<select id="prognosis" required>
+            <option value="">Select</option>
+            <option>Excellent</option>
+            <option>Good</option>
+            <option>Fair</option>
+            <option>Guarded</option>
+          </select></label>
+          <label class="full-row">Additional Notes<textarea id="planNotes" placeholder="Optional"></textarea></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="accordion" data-section="billing">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 5</p>
+          <h3>Billing &amp; Authentication</h3>
+          <p class="muted">Visit type, addendum, and signatures.</p>
+        </div>
+        <div class="status" id="status-billing">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <fieldset>
+            <legend>Visit Type (required)</legend>
+            <label class="inline"><input type="radio" name="visitType" value="No Charge" required> No Charge</label>
+            <label class="inline"><input type="radio" name="visitType" value="Insurance"> Insurance</label>
+          </fieldset>
+          <label>Add Addendum<textarea id="addendum" placeholder="Optional addendum"></textarea></label>
+          <fieldset class="full-row">
+            <legend>Attestation</legend>
+            <label class="inline"><input type="checkbox" id="attest" required> I attest that the information is accurate and complete.</label>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <section class="card preview">
+      <div class="preview-header">
+        <div>
+          <p class="eyebrow">Printable Note</p>
+          <h3>Live Preview</h3>
+          <p class="muted">Updates as you type. Use Print / Export to generate PDF.</p>
+        </div>
+        <div id="completionSummary" class="pill">0/5 sections complete</div>
+      </div>
+      <div id="previewContent" class="preview-content"></div>
+    </section>
+  </main>
+
+  <script src="note.js"></script>
+</body>
+</html>
