@@ -178,30 +178,185 @@
       </header>
       <div class="accordion-body">
         <div class="grid two-col">
-          <label>Blood Pressure<input required id="bp" placeholder="e.g., 120/80"></label>
-          <label>Heart Rate<input required id="heartRate" type="number" min="0" placeholder="bpm"></label>
-          <label>SpO₂<input required id="spo2" type="number" min="0" max="100" placeholder="%"></label>
-          <label>BMI<input id="bmi" type="number" step="0.1" min="0" placeholder="kg/m²"></label>
-          <fieldset data-required-group="examFinding">
-            <legend>Exam findings (select all that apply)</legend>
-            <label class="inline"><input type="checkbox" name="examFinding" value="Edema"> Edema</label>
-            <label class="inline"><input type="checkbox" name="examFinding" value="Erythema"> Erythema</label>
-            <label class="inline"><input type="checkbox" name="examFinding" value="Drainage / infection"> Drainage / infection</label>
-            <label class="inline"><input type="checkbox" name="examFinding" value="Limited opening / trismus"> Limited opening / trismus</label>
-            <label class="inline"><input type="checkbox" name="examFinding" value="Joint sounds"> Joint sounds</label>
-            <label class="inline"><input type="checkbox" name="examFinding" value="Prosthesis mobility"> Prosthesis mobility</label>
-            <label class="inline"><input type="checkbox" name="examFinding" value="Occlusal change"> Occlusal change</label>
+          <fieldset class="full-row">
+            <legend>Vital List</legend>
+            <div class="grid two-col">
+              <label>Recorded Date<input required id="vitalDate" type="date"></label>
+              <label>BP<input required id="bp" placeholder="e.g., 120/80"></label>
+              <label>HR<input required id="heartRate" type="number" min="0" placeholder="bpm"></label>
+              <label>Temperature (°F)<input required id="temperature" type="number" step="0.1" min="80" max="120" placeholder="e.g., 98.6"></label>
+              <label>Neck<input id="neck" type="number" min="0" step="0.1" placeholder="inches"></label>
+              <label>Height / Length (in)<input required id="height" type="number" min="0" step="0.1" placeholder="e.g., 70"></label>
+              <label>Weight (lbs)<input required id="weight" type="number" min="0" step="0.1" placeholder="e.g., 165"></label>
+              <label>BMI<input required id="bmi" type="number" step="0.1" min="0" placeholder="e.g., 23.6"></label>
+              <label>SpO₂<input required id="spo2" type="number" min="0" max="100" placeholder="%"></label>
+              <label>Inhaled O₂<input id="inhaled" type="text" placeholder="e.g., Room air"></label>
+              <label>Head Circumference<input id="headCirc" type="number" min="0" step="0.1" placeholder="inches"></label>
+              <label class="full-row">Comments<textarea id="vitalComments" maxlength="1000" placeholder="Vitals comments (optional)"></textarea></label>
+            </div>
           </fieldset>
-          <label>Imaging reviewed<select id="imaging" required>
-            <option value="">Select study</option>
-            <option>Panoramic</option>
-            <option>CBCT</option>
-            <option>Periapical</option>
-            <option>MRI</option>
-            <option>None</option>
-          </select></label>
-          <label class="full-row">Imaging &amp; diagnostics<textarea id="diagnostics" required placeholder="Key findings"></textarea></label>
-          <label class="full-row">Functional impact<textarea id="functional" required placeholder="Effect on chewing, speech, quality of life"></textarea></label>
+
+          <fieldset class="full-row" data-required-group="examFinding">
+            <legend>Please check all that pertain to patient</legend>
+            <div class="grid two-col">
+              <label class="inline"><input type="checkbox" name="examFinding" value="Shooting pain-head/jaw"> Shooting pain-head/jaw</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Jaw pain"> Jaw pain</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Pneumatization of the sinus/lateral wall"> Pneumatization of the sinus/lateral wall</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Fluctuation of inflammation"> Fluctuation of inflammation</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Swallowing difficulties"> Swallowing difficulties</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Difficulty to eat external force/trauma"> Difficulty to eat external force/trauma</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Recent weight loss caused by chewing"> Recent weight loss caused by chewing</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Heartburn"> Heartburn</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Irritable bowel syndrome"> Irritable bowel syndrome</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Gastritis"> Gastritis</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Diagnosed migraines"> Diagnosed migraines</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Jaw inflammation"> Jaw inflammation</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Pain with closed position of mandible"> Pain with closed position of mandible</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Inability to incise solid food"> Inability to incise solid food</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Mouth breathing"> Mouth breathing</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Prognathic mandible"> Prognathic mandible</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Nutritional deficiency caused by difficulty to eat"> Nutritional deficiency caused by difficulty to eat</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Reflux resulting in loss of mi articulation"> Reflux resulting in loss of mi articulation</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Digestive problems"> Digestive problems</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Xerosomia"> Xerosomia</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Palpation of the mastication muscle, head and orofacial region revealed</legend>
+            <div class="grid two-col">
+              <fieldset data-required-group="painQuality">
+                <legend>Pain Quality</legend>
+                <label class="inline"><input type="checkbox" name="painQuality" value="Sharp/stabbing"> sharp, stabbing pain</label>
+                <label class="inline"><input type="checkbox" name="painQuality" value="Dull/aching"> dull/aching pain</label>
+                <label class="inline"><input type="checkbox" name="painQuality" value="Throbbing"> throbbing pain</label>
+                <label class="inline"><input type="checkbox" name="painQuality" value="Deep/burning"> deep/burning pain</label>
+              </fieldset>
+
+              <fieldset data-required-group="painConsistency">
+                <legend>Pain is</legend>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Consistent, recurrent"> consistent, recurrent</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Intermittent, recurrent"> intermittent, recurrent</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Frequent, recurrent"> frequent, recurrent</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Constant"> constant</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Recent"> recent</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Rare"> rare</label>
+              </fieldset>
+
+              <fieldset data-required-group="painFrequency">
+                <legend>Pain occurs</legend>
+                <label class="inline"><input type="radio" name="painFrequency" value="Daily"> Daily</label>
+                <label class="inline"><input type="radio" name="painFrequency" value="Weekly"> Weekly</label>
+                <label class="inline"><input type="radio" name="painFrequency" value="Monthly"> Monthly</label>
+              </fieldset>
+
+              <fieldset data-required-group="painExperience">
+                <legend>When having pain the patient experiences</legend>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Nausea"> Nausea</label>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Vomiting"> Vomiting</label>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Diarrhea"> Diarrhea</label>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Difficulty swallowing"> Difficulty swallowing</label>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Digestive problems"> Digestive problems</label>
+              </fieldset>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Pain Levels (on a 0-10 pain scale)</legend>
+            <div class="grid two-col">
+              <label>Orofacial Pain<select id="orofacialPain" required></select></label>
+              <label>Headaches/Head Pain<select id="headPain" required></select></label>
+              <label>Mastication Muscle Pain<select id="masticationPain" required></select></label>
+              <label>Migraines<select id="migrainePain" required></select></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row" data-required-group="dailyDifficulty">
+            <legend>Patient experiences difficulty performing daily activities such as</legend>
+            <label class="inline"><input type="checkbox" name="dailyDifficulty" value="Chewing"> Chewing</label>
+            <label class="inline"><input type="checkbox" name="dailyDifficulty" value="Swallowing"> Swallowing</label>
+            <label class="inline"><input type="checkbox" name="dailyDifficulty" value="Brushing"> Brushing</label>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Interincisal Max Opening</legend>
+            <div class="grid two-col">
+              <label>Right<input required id="maxOpeningRight" type="number" min="0" step="0.1" placeholder="mm"></label>
+              <label>Left<input required id="maxOpeningLeft" type="number" min="0" step="0.1" placeholder="mm"></label>
+              <label>Deviation<input required id="maxOpeningDeviation" type="number" min="0" step="0.1" placeholder="mm"></label>
+              <label>Protrusive<input required id="maxOpeningProtrusive" type="number" min="0" step="0.1" placeholder="mm"></label>
+            </div>
+            <p class="muted">All findings indicate patient has a functional impairment that interferes with activities of daily living.</p>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Range of Motion</legend>
+            <div class="grid two-col">
+              <label>Overbite<input required id="overbite" type="number" step="0.1" placeholder="mm"></label>
+              <label>Overjet<input required id="overjet" type="number" step="0.1" placeholder="mm"></label>
+              <label>Reverse overjet<input required id="reverseOverjet" type="number" step="0.1" placeholder="mm"></label>
+            </div>
+          </fieldset>
+
+          <label class="full-row">Enter additional information<textarea id="objectiveInfo" maxlength="3000" placeholder="Max 3000 Characters"></textarea></label>
+
+          <fieldset class="full-row">
+            <legend>Abscess/Lesion in the following quadrants</legend>
+            <label class="inline"><input type="checkbox" name="abscessQuadrant" value="Maxillary right"> Maxillary right</label>
+            <label class="inline"><input type="checkbox" name="abscessQuadrant" value="Maxillary left"> Maxillary left</label>
+            <label class="inline"><input type="checkbox" name="abscessQuadrant" value="Mandibular right"> Mandibular right</label>
+            <label class="inline"><input type="checkbox" name="abscessQuadrant" value="Mandibular left"> Mandibular left</label>
+            <label class="full-row">Location of periapical lesion/cysts/abscess<input id="periapicalLocation" maxlength="200" placeholder="Describe location"></label>
+          </fieldset>
+
+          <label class="full-row">Enter additional for Objective<textarea id="objectiveNotes" maxlength="3000" placeholder="Max 3000 Characters"></textarea></label>
+
+          <label class="full-row">Additional Notes<textarea id="objectiveNotes2" maxlength="3000" placeholder="Max 3000 Characters"></textarea></label>
+
+          <fieldset class="full-row">
+            <legend>Diagnostic Records</legend>
+            <div class="records-grid">
+              <div>
+                <p><strong>Completed</strong></p>
+                <label class="inline"><input type="checkbox" id="cephCompleted"> Cephalogram (CPT 70350)</label>
+                <label class="inline"><input type="checkbox" id="panoCompleted"> Orthopantomagram (CPT 70355)</label>
+              </div>
+              <div>
+                <p><strong>Recommended</strong></p>
+                <label class="inline"><input type="checkbox" id="cephRecommended"> Cephalogram (CPT 70350)</label>
+                <label class="inline"><input type="checkbox" id="panoRecommended"> Orthopantomagram (CPT 70355)</label>
+              </div>
+            </div>
+            <div class="records-grid">
+              <div>
+                <p><strong>CBCT by View - Completed</strong></p>
+                <label class="inline"><input type="checkbox" id="cbctTeethCompleted"> Full mouth x-ray of teeth</label>
+                <label class="inline"><input type="checkbox" id="cbctSinusesCompleted"> Scan of sinuses (CPT 70486)</label>
+                <label class="inline"><input type="checkbox" id="cbctFacialCompleted"> Scan of facial bones (CPT 70460)</label>
+              </div>
+              <div>
+                <p><strong>CBCT by View - Recommended</strong></p>
+                <label class="inline"><input type="checkbox" id="cbctTeethRecommended"> Full mouth x-ray of teeth</label>
+                <label class="inline"><input type="checkbox" id="cbctSinusesRecommended"> Scan of sinuses (CPT 70486)</label>
+                <label class="inline"><input type="checkbox" id="cbctFacialRecommended"> Scan of facial bones (CPT 70460)</label>
+              </div>
+            </div>
+            <p class="muted">Records taken were medically necessary to assess atrophy levels, infection and surgical planning.</p>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Imaging &amp; Diagnostics</legend>
+            <label>Imaging reviewed<select id="imaging" required>
+              <option value="">Select study</option>
+              <option>Panoramic</option>
+              <option>CBCT</option>
+              <option>Periapical</option>
+              <option>MRI</option>
+              <option>None</option>
+            </select></label>
+            <label class="full-row">Imaging &amp; diagnostics<textarea id="diagnostics" required placeholder="Key findings"></textarea></label>
+            <label class="full-row">Functional impact<textarea id="functional" required placeholder="Effect on chewing, speech, quality of life"></textarea></label>
+          </fieldset>
         </div>
       </div>
     </section>

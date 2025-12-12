@@ -2,9 +2,16 @@ const demoUser = { username: 'provider', password: 'care' };
 const requiredFields = [
   'patientName', 'patientDob', 'dateOfService', 'timeOfService', 'mrn', 'location', 'referring', 'supervising',
   'symptomDurationYears', 'painScore', 'chronicPainYears', 'conservativeDuration',
-  'bp', 'heartRate', 'spo2', 'diagnostics', 'functional', 'imaging',
+  'vitalDate', 'bp', 'heartRate', 'temperature', 'height', 'weight', 'bmi', 'spo2', 'inhaled', 'neck', 'headCirc', 'vitalComments',
+  'orofacialPain', 'headPain', 'masticationPain', 'migrainePain',
+  'maxOpeningRight', 'maxOpeningLeft', 'maxOpeningDeviation', 'maxOpeningProtrusive', 'overbite', 'overjet', 'reverseOverjet',
+  'objectiveInfo', 'objectiveNotes', 'objectiveNotes2', 'periapicalLocation',
+  'diagnostics', 'functional', 'imaging',
   'primaryDiagnosis', 'assessment', 'necessity',
-  'planGoals', 'planVerification', 'followupInterval', 'prognosis', 'billingCode'
+  'planGoals', 'planVerification', 'followupInterval', 'prognosis', 'billingCode',
+  'cephCompleted', 'panoCompleted', 'cephRecommended', 'panoRecommended',
+  'cbctTeethCompleted', 'cbctSinusesCompleted', 'cbctFacialCompleted',
+  'cbctTeethRecommended', 'cbctSinusesRecommended', 'cbctFacialRecommended'
 ];
 
 const sections = ['subjective', 'objective', 'assessment', 'plan', 'billing'];
@@ -22,7 +29,11 @@ function getFormData() {
   const data = {};
   requiredFields.forEach(id => {
     const element = document.getElementById(id);
-    data[id] = element ? element.value : '';
+    if (element) {
+      data[id] = element.type === 'checkbox' ? element.checked : element.value;
+    } else {
+      data[id] = '';
+    }
   });
   const visitType = document.querySelector('input[name="visitType"]:checked');
   data.visitType = visitType ? visitType.value : '';
@@ -32,6 +43,8 @@ function getFormData() {
   data.symptomCourse = symptomCourse ? symptomCourse.value : '';
   const symptomStatus = document.querySelector('input[name="symptomStatus"]:checked');
   data.symptomStatus = symptomStatus ? symptomStatus.value : '';
+  const painFrequency = document.querySelector('input[name="painFrequency"]:checked');
+  data.painFrequency = painFrequency ? painFrequency.value : '';
   data.addendum = document.getElementById('addendum').value || '';
   data.attest = document.getElementById('attest').checked;
   data.chiefComplaints = getCheckedValues('chiefComplaints');
@@ -39,6 +52,11 @@ function getFormData() {
   data.onsetSpeed = getCheckedValues('onsetSpeed');
   data.conservativeTherapies = getCheckedValues('conservativeTherapies');
   data.examFinding = getCheckedValues('examFinding');
+  data.painQuality = getCheckedValues('painQuality');
+  data.painConsistency = getCheckedValues('painConsistency');
+  data.painExperience = getCheckedValues('painExperience');
+  data.dailyDifficulty = getCheckedValues('dailyDifficulty');
+  data.abscessQuadrant = getCheckedValues('abscessQuadrant');
   data.supportingDiagnosis = getCheckedValues('supportingDiagnosis');
   data.planProcedures = getCheckedValues('planProcedures');
   data.planAdjuncts = getCheckedValues('planAdjuncts');
@@ -58,7 +76,7 @@ function populateForm(data) {
         el.value = data[key];
       }
     }
-    if (['chiefComplaints', 'onsetMechanism', 'onsetSpeed', 'conservativeTherapies', 'examFinding', 'supportingDiagnosis', 'planProcedures', 'planAdjuncts'].includes(key)) {
+    if (['chiefComplaints', 'onsetMechanism', 'onsetSpeed', 'conservativeTherapies', 'examFinding', 'painQuality', 'painConsistency', 'painExperience', 'dailyDifficulty', 'abscessQuadrant', 'supportingDiagnosis', 'planProcedures', 'planAdjuncts'].includes(key)) {
       document.querySelectorAll(`input[name="${key}"]`).forEach(input => {
         input.checked = Array.isArray(data[key]) && data[key].includes(input.value);
       });
@@ -78,6 +96,10 @@ function populateForm(data) {
   }
   if (data.symptomStatus) {
     const radio = document.querySelector(`input[name="symptomStatus"][value="${data.symptomStatus}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (data.painFrequency) {
+    const radio = document.querySelector(`input[name="painFrequency"][value="${data.painFrequency}"]`);
     if (radio) radio.checked = true;
   }
   if (data.authNeeded) {
@@ -190,8 +212,19 @@ function renderPreview() {
   const attestLabel = data.attest ? 'Yes' : 'No';
   const painPatternLabel = data.painPattern || '—';
   const authLabel = data.authNeeded || '—';
-
   const listOrDash = list => (list && list.length ? list.join(', ') : '—');
+  const painQualityLabel = listOrDash(data.painQuality);
+  const painConsistencyLabel = listOrDash(data.painConsistency);
+  const painExperienceLabel = listOrDash(data.painExperience);
+  const dailyDifficultyLabel = listOrDash(data.dailyDifficulty);
+  const abscessLabel = listOrDash(data.abscessQuadrant);
+  const records = [
+    formatRecord('Cephalogram (CPT 70350)', data.cephCompleted, data.cephRecommended),
+    formatRecord('Orthopantomagram (CPT 70355)', data.panoCompleted, data.panoRecommended),
+    formatRecord('Full mouth x-ray of teeth', data.cbctTeethCompleted, data.cbctTeethRecommended),
+    formatRecord('Scan of sinuses (CPT 70486)', data.cbctSinusesCompleted, data.cbctSinusesRecommended),
+    formatRecord('Scan of facial bones (CPT 70460)', data.cbctFacialCompleted, data.cbctFacialRecommended)
+  ].join('<br>');
 
   previewContent.innerHTML = `
     <div class="preview-grid">
@@ -230,8 +263,18 @@ function renderPreview() {
       </div>
       <div>
         <h4>Objective</h4>
-        <p><strong>Vitals</strong><br>BP ${data.bp || '—'}, HR ${data.heartRate || '—'} bpm, SpO₂ ${data.spo2 || '—'}%, BMI ${data.bmi || '—'}</p>
+        <p><strong>Vitals</strong><br>${data.vitalDate || '—'} | BP ${data.bp || '—'}, HR ${data.heartRate || '—'} bpm, Temp ${data.temperature || '—'}°F, SpO₂ ${data.spo2 || '—'}%</p>
+        <p><strong>Measurements</strong><br>Height ${data.height || '—'} in, Weight ${data.weight || '—'} lbs, BMI ${data.bmi || '—'}, Neck ${data.neck || '—'} in, Head Circ ${data.headCirc || '—'} in, Inhaled O₂ ${data.inhaled || '—'}</p>
         <p><strong>Exam findings</strong><br>${listOrDash(data.examFinding)}</p>
+        <p><strong>Pain quality</strong><br>${painQualityLabel}</p>
+        <p><strong>Pain pattern</strong><br>${painConsistencyLabel}; Frequency: ${data.painFrequency || '—'}; Experiences: ${painExperienceLabel}</p>
+        <p><strong>Pain scores</strong><br>Orofacial ${data.orofacialPain || '—'}/10, Head ${data.headPain || '—'}/10, Mastication ${data.masticationPain || '—'}/10, Migraines ${data.migrainePain || '—'}/10</p>
+        <p><strong>Daily activity difficulty</strong><br>${dailyDifficultyLabel}</p>
+        <p><strong>Interincisal max opening</strong><br>Right ${data.maxOpeningRight || '—'} mm, Left ${data.maxOpeningLeft || '—'} mm, Deviation ${data.maxOpeningDeviation || '—'} mm, Protrusive ${data.maxOpeningProtrusive || '—'} mm</p>
+        <p><strong>Range of motion</strong><br>Overbite ${data.overbite || '—'} mm, Overjet ${data.overjet || '—'} mm, Reverse overjet ${data.reverseOverjet || '—'} mm</p>
+        <p><strong>Abscess / lesion</strong><br>${abscessLabel}; Location: ${data.periapicalLocation || '—'}</p>
+        <p><strong>Objective notes</strong><br>${data.objectiveInfo || '—'}<br>${data.objectiveNotes || '—'}<br>${data.objectiveNotes2 || '—'}</p>
+        <p><strong>Diagnostic records</strong><br>${records}</p>
         <p><strong>Imaging</strong><br>${data.imaging || '—'}</p>
         <p><strong>Diagnostics</strong><br>${data.diagnostics || '—'}</p>
         <p><strong>Functional Impact</strong><br>${data.functional || '—'}</p>
@@ -280,6 +323,7 @@ function bindFormListeners() {
 }
 
 (function bootstrap() {
+  populatePainOptions();
   handleAccordion();
   bindFormListeners();
   renderPreview();
@@ -296,6 +340,25 @@ function bindFormListeners() {
   syncPainScoreLabel();
 })();
 
+function populatePainOptions() {
+  const ids = ['orofacialPain', 'headPain', 'masticationPain', 'migrainePain'];
+  ids.forEach(id => {
+    const select = document.getElementById(id);
+    if (!select) return;
+    select.innerHTML = '';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Select score';
+    select.appendChild(placeholder);
+    for (let i = 0; i <= 10; i += 1) {
+      const opt = document.createElement('option');
+      opt.value = `${i}`;
+      opt.textContent = `${i}`;
+      select.appendChild(opt);
+    }
+  });
+}
+
 function getCheckedValues(name) {
   return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(input => input.value);
 }
@@ -305,4 +368,11 @@ function syncPainScoreLabel() {
   if (slider) {
     document.getElementById('painScoreValue').textContent = `${slider.value}/10`;
   }
+}
+
+function formatRecord(label, completed, recommended) {
+  const status = [];
+  if (completed) status.push('Completed');
+  if (recommended) status.push('Recommended');
+  return `${label}: ${status.length ? status.join(', ') : '—'}`;
 }
