@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reconstructive Surgery Note Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="note.css">
+  <link rel="icon" type="image/png" href="implant.png">
+</head>
+<body>
+  <div id="loginGate" class="overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <img src="RIC-logo.png" alt="Regional Implant Centers Logo" class="logo">
+        <div>
+          <h2>Sign in to continue</h2>
+          <p class="muted">Demo-only authentication to keep notes private on this device.</p>
+        </div>
+      </div>
+      <form id="loginForm" class="grid two-col">
+        <label>Username<input type="text" id="loginUser" required autocomplete="username"></label>
+        <label>Password<input type="password" id="loginPass" required autocomplete="current-password"></label>
+        <div class="full-row">
+          <button type="submit" class="primary">Sign in</button>
+          <p class="muted">Use <strong>provider</strong> / <strong>care</strong> for demo access.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <header class="page-header">
+    <div class="brand">
+      <img src="RIC-logo.png" alt="Regional Implant Centers" class="logo">
+      <div>
+        <p class="eyebrow">Consult &amp; Operative Note</p>
+        <h1>Reconstructive Surgery Note Builder</h1>
+        <p class="muted">Collapsible sections, required field tracking, and printable output.</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a class="ghost" href="./">Back to app selection</a>
+      <button id="saveDraft" class="secondary">Save Draft</button>
+      <button id="printNote" class="primary">Print / Export</button>
+      <button id="logout" class="ghost">Logout</button>
+    </div>
+  </header>
+
+  <main id="app" class="app hidden">
+    <section class="grid two-col card">
+      <h2 class="full-row">Patient Snapshot</h2>
+      <label>Patient Name<input required id="patientName" placeholder="e.g., Joshua Dwayne Greer Woodard"></label>
+      <label>Date of Birth<input required id="patientDob" type="date"></label>
+      <label>Date of Service<input required id="dateOfService" type="date"></label>
+      <label>Time of Service<input required id="timeOfService" type="time"></label>
+      <label>MRN / ID<input required id="mrn" placeholder="Record number"></label>
+      <label>Location<input required id="location" placeholder="Street, City, State"></label>
+      <label>Referring Provider<input required id="referring" placeholder="Name"></label>
+      <label>Supervising Provider<select id="supervising" required>
+        <option value="">Select provider</option>
+        <option>Robert Gordon MD, ABIM, ABSA, NPI (20577388)</option>
+        <option>Gregory Carnevale MD, MBA, NPI (1689615924)</option>
+        <option>James Simriotis MD, Board Certified Sleep, NPI (2035026888)</option>
+      </select></label>
+    </section>
+
+    <section class="accordion" data-section="subjective">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 1</p>
+          <h3>Subjective</h3>
+          <p class="muted">Chief complaints, history, symptom checklist, and pain profile.</p>
+        </div>
+        <div class="status" id="status-subjective">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <fieldset class="full-row" data-required-group="chiefComplaints">
+            <legend>Chief Complaints (select all that pertain to patient)</legend>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Orofacial pain"> Orofacial pain</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Sinus infections"> Sinus infections</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Pain behind/around eyes"> Pain behind/around eyes</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Swollen/painful face"> Swollen/painful face</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Head pain"> Head pain</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Migraines"> Migraines</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Jaw pain"> Jaw pain</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Intraoral infection/abscess"> Intraoral infection/abscess</label>
+          </fieldset>
+
+          <div class="grid two-col">
+            <label>Current symptoms present for (years)
+              <input required id="symptomDurationYears" type="number" min="0" placeholder="e.g., 2">
+            </label>
+            <label>Current symptoms present for (months)
+              <input id="symptomDurationMonths" type="number" min="0" max="11" placeholder="0-11">
+            </label>
+          </div>
+
+          <fieldset data-required-group="onsetMechanism">
+            <legend>Onset of symptoms</legend>
+            <label class="inline"><input type="checkbox" name="onsetMechanism" value="Gradual"> Gradual</label>
+            <label class="inline"><input type="checkbox" name="onsetMechanism" value="Trauma related"> Trauma related</label>
+          </fieldset>
+
+          <fieldset data-required-group="onsetSpeed">
+            <legend>Onset speed</legend>
+            <label class="inline"><input type="checkbox" name="onsetSpeed" value="Gradual"> Gradual</label>
+            <label class="inline"><input type="checkbox" name="onsetSpeed" value="Abrupt"> Abrupt</label>
+            <label class="inline"><input type="checkbox" name="onsetSpeed" value="Rapid"> Rapid</label>
+            <label class="inline"><input type="checkbox" name="onsetSpeed" value="Following infection"> Following infection</label>
+          </fieldset>
+
+          <fieldset data-required-group="symptomCourse">
+            <legend>Progress over course of disease</legend>
+            <label class="inline"><input type="radio" name="symptomCourse" value="Progressively worsened"> Progressively worsened</label>
+            <label class="inline"><input type="radio" name="symptomCourse" value="Remained constant"> Remained constant</label>
+            <label class="inline"><input type="radio" name="symptomCourse" value="Escalated significantly over last couple weeks"> Escalated significantly over last couple weeks</label>
+          </fieldset>
+
+          <fieldset data-required-group="symptomStatus">
+            <legend>Current status of symptoms</legend>
+            <label class="inline"><input type="radio" name="symptomStatus" value="Stable in severity"> Stable in severity</label>
+            <label class="inline"><input type="radio" name="symptomStatus" value="Somewhat worse"> Somewhat worse</label>
+            <label class="inline"><input type="radio" name="symptomStatus" value="Significantly worse"> Significantly worse</label>
+            <label class="inline"><input type="radio" name="symptomStatus" value="At maximal severity"> At maximal severity</label>
+          </fieldset>
+
+          <div class="grid two-col">
+            <label>Pain severity (0-10)
+              <input required id="painScore" type="range" min="0" max="10" value="0">
+              <span class="muted" id="painScoreValue">0/10</span>
+            </label>
+            <fieldset data-required-group="painPattern">
+              <legend>Pain pattern</legend>
+              <label class="inline"><input type="radio" name="painPattern" value="Intermittent"> Intermittent</label>
+              <label class="inline"><input type="radio" name="painPattern" value="Constant"> Constant</label>
+              <label class="inline"><input type="radio" name="painPattern" value="Post-operative"> Post-operative</label>
+              <label class="inline"><input type="radio" name="painPattern" value="None"> None</label>
+            </fieldset>
+          </div>
+
+          <div class="grid two-col">
+            <label>Pain is chronic and has been present more than (years)
+              <input required id="chronicPainYears" type="number" min="0" placeholder="e.g., 2">
+            </label>
+            <label>Pain is chronic and has been present more than (months)
+              <input id="chronicPainMonths" type="number" min="0" max="11" placeholder="0-11">
+            </label>
+          </div>
+
+          <fieldset data-required-group="conservativeTherapies" class="full-row">
+            <legend>Conservative Therapies Attempted</legend>
+            <label class="inline"><input type="checkbox" name="conservativeTherapies" value="Soft/Liquid Diet"> Soft/Liquid Diet</label>
+            <label class="inline"><input type="checkbox" name="conservativeTherapies" value="RX Pain Medications"> RX Pain Medications</label>
+            <label class="inline"><input type="checkbox" name="conservativeTherapies" value="OTC Medications"> OTC Medications</label>
+            <label class="inline"><input type="checkbox" name="conservativeTherapies" value="Antibiotic Therapy"> Antibiotic Therapy</label>
+          </fieldset>
+
+          <label class="full-row">Conservative therapies attempted for how long?
+            <input required id="conservativeDuration" placeholder="e.g., 2 years">
+          </label>
+
+          <label class="full-row">Additional Notes for Subjective (max 3000 characters)
+            <textarea id="symptomNotes" maxlength="3000" placeholder="Enter additional notes for Subjective"></textarea>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="accordion" data-section="objective">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 2</p>
+          <h3>Objective</h3>
+          <p class="muted">Vitals, focused exam findings, imaging, and diagnostics.</p>
+        </div>
+        <div class="status" id="status-objective">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <fieldset class="full-row">
+            <legend>Vital List</legend>
+            <div class="grid two-col">
+              <label>Recorded Date<input required id="vitalDate" type="date"></label>
+              <label>BP<input required id="bp" placeholder="e.g., 120/80"></label>
+              <label>HR<input required id="heartRate" type="number" min="0" placeholder="bpm"></label>
+              <label>Temperature (°F)<input required id="temperature" type="number" step="0.1" min="80" max="120" placeholder="e.g., 98.6"></label>
+              <label>Neck<input id="neck" type="number" min="0" step="0.1" placeholder="inches"></label>
+              <label>Height / Length (in)<input required id="height" type="number" min="0" step="0.1" placeholder="e.g., 70"></label>
+              <label>Weight (lbs)<input required id="weight" type="number" min="0" step="0.1" placeholder="e.g., 165"></label>
+              <label>BMI<input required id="bmi" type="number" step="0.1" min="0" placeholder="e.g., 23.6"></label>
+              <label>SpO₂<input required id="spo2" type="number" min="0" max="100" placeholder="%"></label>
+              <label>Inhaled O₂<input id="inhaled" type="text" placeholder="e.g., Room air"></label>
+              <label>Head Circumference<input id="headCirc" type="number" min="0" step="0.1" placeholder="inches"></label>
+              <label class="full-row">Comments<textarea id="vitalComments" maxlength="1000" placeholder="Vitals comments (optional)"></textarea></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row" data-required-group="examFinding">
+            <legend>Please check all that pertain to patient</legend>
+            <div class="grid two-col">
+              <label class="inline"><input type="checkbox" name="examFinding" value="Shooting pain-head/jaw"> Shooting pain-head/jaw</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Jaw pain"> Jaw pain</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Pneumatization of the sinus/lateral wall"> Pneumatization of the sinus/lateral wall</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Fluctuation of inflammation"> Fluctuation of inflammation</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Swallowing difficulties"> Swallowing difficulties</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Difficulty to eat external force/trauma"> Difficulty to eat external force/trauma</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Recent weight loss caused by chewing"> Recent weight loss caused by chewing</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Heartburn"> Heartburn</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Irritable bowel syndrome"> Irritable bowel syndrome</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Gastritis"> Gastritis</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Diagnosed migraines"> Diagnosed migraines</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Jaw inflammation"> Jaw inflammation</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Pain with closed position of mandible"> Pain with closed position of mandible</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Inability to incise solid food"> Inability to incise solid food</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Mouth breathing"> Mouth breathing</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Prognathic mandible"> Prognathic mandible</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Nutritional deficiency caused by difficulty to eat"> Nutritional deficiency caused by difficulty to eat</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Reflux resulting in loss of mi articulation"> Reflux resulting in loss of mi articulation</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Digestive problems"> Digestive problems</label>
+              <label class="inline"><input type="checkbox" name="examFinding" value="Xerosomia"> Xerosomia</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Palpation of the mastication muscle, head and orofacial region revealed</legend>
+            <div class="grid two-col">
+              <fieldset data-required-group="painQuality">
+                <legend>Pain Quality</legend>
+                <label class="inline"><input type="checkbox" name="painQuality" value="Sharp/stabbing"> sharp, stabbing pain</label>
+                <label class="inline"><input type="checkbox" name="painQuality" value="Dull/aching"> dull/aching pain</label>
+                <label class="inline"><input type="checkbox" name="painQuality" value="Throbbing"> throbbing pain</label>
+                <label class="inline"><input type="checkbox" name="painQuality" value="Deep/burning"> deep/burning pain</label>
+              </fieldset>
+
+              <fieldset data-required-group="painConsistency">
+                <legend>Pain is</legend>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Consistent, recurrent"> consistent, recurrent</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Intermittent, recurrent"> intermittent, recurrent</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Frequent, recurrent"> frequent, recurrent</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Constant"> constant</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Recent"> recent</label>
+                <label class="inline"><input type="checkbox" name="painConsistency" value="Rare"> rare</label>
+              </fieldset>
+
+              <fieldset data-required-group="painFrequency">
+                <legend>Pain occurs</legend>
+                <label class="inline"><input type="radio" name="painFrequency" value="Daily"> Daily</label>
+                <label class="inline"><input type="radio" name="painFrequency" value="Weekly"> Weekly</label>
+                <label class="inline"><input type="radio" name="painFrequency" value="Monthly"> Monthly</label>
+              </fieldset>
+
+              <fieldset data-required-group="painExperience">
+                <legend>When having pain the patient experiences</legend>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Nausea"> Nausea</label>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Vomiting"> Vomiting</label>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Diarrhea"> Diarrhea</label>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Difficulty swallowing"> Difficulty swallowing</label>
+                <label class="inline"><input type="checkbox" name="painExperience" value="Digestive problems"> Digestive problems</label>
+              </fieldset>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Pain Levels (on a 0-10 pain scale)</legend>
+            <div class="grid two-col">
+              <label>Orofacial Pain<select id="orofacialPain" required></select></label>
+              <label>Headaches/Head Pain<select id="headPain" required></select></label>
+              <label>Mastication Muscle Pain<select id="masticationPain" required></select></label>
+              <label>Migraines<select id="migrainePain" required></select></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row" data-required-group="dailyDifficulty">
+            <legend>Patient experiences difficulty performing daily activities such as</legend>
+            <label class="inline"><input type="checkbox" name="dailyDifficulty" value="Chewing"> Chewing</label>
+            <label class="inline"><input type="checkbox" name="dailyDifficulty" value="Swallowing"> Swallowing</label>
+            <label class="inline"><input type="checkbox" name="dailyDifficulty" value="Brushing"> Brushing</label>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Interincisal Max Opening</legend>
+            <div class="grid two-col">
+              <label>Right<input required id="maxOpeningRight" type="number" min="0" step="0.1" placeholder="mm"></label>
+              <label>Left<input required id="maxOpeningLeft" type="number" min="0" step="0.1" placeholder="mm"></label>
+              <label>Deviation<input required id="maxOpeningDeviation" type="number" min="0" step="0.1" placeholder="mm"></label>
+              <label>Protrusive<input required id="maxOpeningProtrusive" type="number" min="0" step="0.1" placeholder="mm"></label>
+            </div>
+            <p class="muted">All findings indicate patient has a functional impairment that interferes with activities of daily living.</p>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Range of Motion</legend>
+            <div class="grid two-col">
+              <label>Overbite<input required id="overbite" type="number" step="0.1" placeholder="mm"></label>
+              <label>Overjet<input required id="overjet" type="number" step="0.1" placeholder="mm"></label>
+              <label>Reverse overjet<input required id="reverseOverjet" type="number" step="0.1" placeholder="mm"></label>
+            </div>
+          </fieldset>
+
+          <label class="full-row">Enter additional information<textarea id="objectiveInfo" maxlength="3000" placeholder="Max 3000 Characters"></textarea></label>
+
+          <fieldset class="full-row">
+            <legend>Abscess/Lesion in the following quadrants</legend>
+            <label class="inline"><input type="checkbox" name="abscessQuadrant" value="Maxillary right"> Maxillary right</label>
+            <label class="inline"><input type="checkbox" name="abscessQuadrant" value="Maxillary left"> Maxillary left</label>
+            <label class="inline"><input type="checkbox" name="abscessQuadrant" value="Mandibular right"> Mandibular right</label>
+            <label class="inline"><input type="checkbox" name="abscessQuadrant" value="Mandibular left"> Mandibular left</label>
+            <label class="full-row">Location of periapical lesion/cysts/abscess<input id="periapicalLocation" maxlength="200" placeholder="Describe location"></label>
+          </fieldset>
+
+          <label class="full-row">Enter additional for Objective<textarea id="objectiveNotes" maxlength="3000" placeholder="Max 3000 Characters"></textarea></label>
+
+          <label class="full-row">Additional Notes<textarea id="objectiveNotes2" maxlength="3000" placeholder="Max 3000 Characters"></textarea></label>
+
+          <fieldset class="full-row">
+            <legend>Diagnostic Records</legend>
+            <div class="records-grid">
+              <div>
+                <p><strong>Completed</strong></p>
+                <label class="inline"><input type="checkbox" id="cephCompleted"> Cephalogram (CPT 70350)</label>
+                <label class="inline"><input type="checkbox" id="panoCompleted"> Orthopantomagram (CPT 70355)</label>
+              </div>
+              <div>
+                <p><strong>Recommended</strong></p>
+                <label class="inline"><input type="checkbox" id="cephRecommended"> Cephalogram (CPT 70350)</label>
+                <label class="inline"><input type="checkbox" id="panoRecommended"> Orthopantomagram (CPT 70355)</label>
+              </div>
+            </div>
+            <div class="records-grid">
+              <div>
+                <p><strong>CBCT by View - Completed</strong></p>
+                <label class="inline"><input type="checkbox" id="cbctTeethCompleted"> Full mouth x-ray of teeth</label>
+                <label class="inline"><input type="checkbox" id="cbctSinusesCompleted"> Scan of sinuses (CPT 70486)</label>
+                <label class="inline"><input type="checkbox" id="cbctFacialCompleted"> Scan of facial bones (CPT 70460)</label>
+              </div>
+              <div>
+                <p><strong>CBCT by View - Recommended</strong></p>
+                <label class="inline"><input type="checkbox" id="cbctTeethRecommended"> Full mouth x-ray of teeth</label>
+                <label class="inline"><input type="checkbox" id="cbctSinusesRecommended"> Scan of sinuses (CPT 70486)</label>
+                <label class="inline"><input type="checkbox" id="cbctFacialRecommended"> Scan of facial bones (CPT 70460)</label>
+              </div>
+            </div>
+            <p class="muted">Records taken were medically necessary to assess atrophy levels, infection and surgical planning.</p>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Imaging &amp; Diagnostics</legend>
+            <label>Imaging reviewed<select id="imaging" required>
+              <option value="">Select study</option>
+              <option>Panoramic</option>
+              <option>CBCT</option>
+              <option>Periapical</option>
+              <option>MRI</option>
+              <option>None</option>
+            </select></label>
+            <label class="full-row">Imaging &amp; diagnostics<textarea id="diagnostics" required placeholder="Key findings"></textarea></label>
+            <label class="full-row">Functional impact<textarea id="functional" required placeholder="Effect on chewing, speech, quality of life"></textarea></label>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <section class="accordion" data-section="assessment">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 3</p>
+          <h3>Assessment</h3>
+          <p class="muted">Primary diagnosis, supporting diagnoses, and medical necessity.</p>
+        </div>
+        <div class="status" id="status-assessment">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <label>Primary diagnosis<select id="primaryDiagnosis" required>
+            <option value="">Select diagnosis</option>
+            <option>Temporomandibular joint disorder</option>
+            <option>Myofascial pain dysfunction</option>
+            <option>Neuropathic facial pain</option>
+            <option>Post-surgical reconstruction</option>
+            <option>Implant complication</option>
+            <option>Osteomyelitis</option>
+            <option>Other</option>
+          </select></label>
+          <fieldset data-required-group="supportingDiagnosis">
+            <legend>Supporting diagnoses</legend>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Chronic pain"> Chronic pain</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Sleep disordered breathing"> Sleep disordered breathing</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Malocclusion"> Malocclusion</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Muscle spasm"> Muscle spasm</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Sinus involvement"> Sinus involvement</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Soft tissue defect"> Soft tissue defect</label>
+          </fieldset>
+          <label class="full-row">Assessment narrative<textarea id="assessment" required placeholder="Clinical reasoning"></textarea></label>
+          <label class="full-row">Medical necessity<textarea id="necessity" required placeholder="Functional impairment and rationale"></textarea></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="accordion" data-section="plan">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 4</p>
+          <h3>Plan</h3>
+          <p class="muted">Treatment plan, procedural options, and prognostic outlook.</p>
+        </div>
+        <div class="status" id="status-plan">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <label class="full-row">Treatment goals
+            <textarea id="planGoals" required>Restore physiological function, reduce pain, and restore activities of daily living. Treatment goals aim to decrease pain so that normal modalities of lifestyle are achievable.</textarea>
+          </label>
+          <fieldset class="full-row" data-required-group="planProcedures">
+            <legend>The treatment plan consists of</legend>
+            <div class="procedure-grid">
+              <label class="procedure-line"><input type="checkbox" id="planGraftMaxilla" name="planProcedures" value="Bone grafting (includes obtaining graft), maxilla (CPT 21210)" data-units-id="unitGraftMaxilla"> Bone grafting (includes obtaining graft), maxilla (CPT 21210) <input type="number" id="unitGraftMaxilla" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planGraftMandible" name="planProcedures" value="Bone grafting (includes obtaining graft), mandible (CPT 21215)" data-units-id="unitGraftMandible"> Bone grafting (includes obtaining graft), mandible (CPT 21215) <input type="number" id="unitGraftMandible" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planReconMaxilla" name="planProcedures" value="Reconstruction of maxilla, endosteal, complete (CPT 21249)" data-units-id="unitReconMaxilla"> Reconstruction of maxilla, endosteal, complete (CPT 21249) <input type="number" id="unitReconMaxilla" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planReconMandible" name="planProcedures" value="Reconstruction of mandible, endosteal, complete (CPT 21246)" data-units-id="unitReconMandible"> Reconstruction of mandible, endosteal, complete (CPT 21246) <input type="number" id="unitReconMandible" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planCurettageMaxilla" name="planProcedures" value="Curettage of infected soft tissue(s), maxilla (CPT 21060)" data-units-id="unitCurettageMaxilla"> Curettage of infected soft tissue(s), maxilla (CPT 21060) <input type="number" id="unitCurettageMaxilla" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planCurettageMandible" name="planProcedures" value="Curettage of infected soft tissue(s), mandible (CPT 21040)" data-units-id="unitCurettageMandible"> Curettage of infected soft tissue(s), mandible (CPT 21040) <input type="number" id="unitCurettageMandible" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planExcisionMaxilla" name="planProcedures" value="Excision of infected bone, maxilla (CPT 21026)" data-units-id="unitExcisionMaxilla"> Excision of infected bone, maxilla (CPT 21026) <input type="number" id="unitExcisionMaxilla" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planExcisionMandible" name="planProcedures" value="Excision of infected bone, mandible (CPT 21025)" data-units-id="unitExcisionMandible"> Excision of infected bone, mandible (CPT 21025) <input type="number" id="unitExcisionMandible" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planAlveoloplasty" name="planProcedures" value="Alveoloplasty, U/L/BI/L quadrant: surgical (CPT 41874)" data-units-id="unitAlveoloplasty"> Alveoloplasty, U/L/BI/L quadrant: surgical (CPT 41874) <input type="number" id="unitAlveoloplasty" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planDefinitiveProsthesis" name="planProcedures" value="Impression and custom preparation: definitive prosthesis (CPT 21080)" data-units-id="unitDefinitiveProsthesis"> Impression and custom preparation: definitive prosthesis (CPT 21080) <input type="number" id="unitDefinitiveProsthesis" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planInterimProsthesis" name="planProcedures" value="Impression and custom preparation: interim prosthesis (CPT 21081)" data-units-id="unitInterimProsthesis"> Impression and custom preparation: interim prosthesis (CPT 21081) <input type="number" id="unitInterimProsthesis" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planAlveolectomy" name="planProcedures" value="Alveolectomy, per site, maxilla (CPT 41850)" data-units-id="unitAlveolectomy"> Alveolectomy, per site, maxilla (CPT 41850) <input type="number" id="unitAlveolectomy" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planImplantRemoval" name="planProcedures" value="Removal of implant, Maxillary deep (CPT 20680)" data-units-id="unitImplantRemoval"> Removal of implant, Maxillary deep (CPT 20680) <input type="number" id="unitImplantRemoval" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planTorusPalatinus" name="planProcedures" value="Excision of maxillary torus palatinus (CPT 21023)" data-units-id="unitTorusPalatinus"> Excision of maxillary torus palatinus (CPT 21023) <input type="number" id="unitTorusPalatinus" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planTorusMandibularis" name="planProcedures" value="Excision of torus mandibularis (CPT 21031)" data-units-id="unitTorusMandibularis"> Excision of torus mandibularis (CPT 21031) <input type="number" id="unitTorusMandibularis" min="0" placeholder="units"></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Treatment Plan Verification</legend>
+            <label class="inline"><input type="checkbox" name="planVerification" value="Alternatives reviewed"> Alternative management options reviewed</label>
+            <label class="inline"><input type="checkbox" name="planVerification" value="All questions addressed"> All questions addressed</label>
+            <label class="inline"><input type="checkbox" name="planVerification" value="Patient understands plan"> Patient voices understanding of above treatment plan and chooses to proceed with treatment</label>
+            <label class="inline"><input type="checkbox" name="planVerification" value="Necessity discussed"> Necessity for treatment plan discussed in detail with patient</label>
+          </fieldset>
+
+          <div class="grid two-col full-row">
+            <fieldset data-required-group="existingOcclusal" class="occlusal">
+              <legend>Existing Occlusal Class</legend>
+              <label class="inline"><input type="radio" name="existingOcclusal" value="I"> I</label>
+              <label class="inline"><input type="radio" name="existingOcclusal" value="II"> II</label>
+              <label class="inline"><input type="radio" name="existingOcclusal" value="III"> III</label>
+            </fieldset>
+            <fieldset data-required-group="plannedOcclusal" class="occlusal">
+              <legend>Planned Occlusal Class</legend>
+              <label class="inline"><input type="radio" name="plannedOcclusal" value="I"> I</label>
+              <label class="inline"><input type="radio" name="plannedOcclusal" value="II"> II</label>
+              <label class="inline"><input type="radio" name="plannedOcclusal" value="III"> III</label>
+            </fieldset>
+          </div>
+
+          <label class="full-row">Missing teeth #’s<textarea id="missingTeeth" required placeholder="List missing tooth numbers">1,2,5,13,15,17,19,20,30</textarea></label>
+          <div class="inline-checks full-row">
+            <label class="inline"><input type="checkbox" id="edentulousMaxilla"> Edentulous Maxilla</label>
+            <label class="inline"><input type="checkbox" id="edentulousMandible"> Edentulous Mandible</label>
+          </div>
+
+          <fieldset class="full-row">
+            <legend>Location of Implants</legend>
+            <div class="implant-grid">
+              <div class="implant-row"><label>1. Tooth Number<input id="implantTooth1" type="text"></label><label>Bone Height<input id="implantHeight1" type="text"></label><label>Bone Width<input id="implantWidth1" type="text"></label></div>
+              <div class="implant-row"><label>2. Tooth Number<input id="implantTooth2" type="text"></label><label>Bone Height<input id="implantHeight2" type="text"></label><label>Bone Width<input id="implantWidth2" type="text"></label></div>
+              <div class="implant-row"><label>3. Tooth Number<input id="implantTooth3" type="text"></label><label>Bone Height<input id="implantHeight3" type="text"></label><label>Bone Width<input id="implantWidth3" type="text"></label></div>
+              <div class="implant-row"><label>4. Tooth Number<input id="implantTooth4" type="text"></label><label>Bone Height<input id="implantHeight4" type="text"></label><label>Bone Width<input id="implantWidth4" type="text"></label></div>
+              <div class="implant-row"><label>5. Tooth Number<input id="implantTooth5" type="text"></label><label>Bone Height<input id="implantHeight5" type="text"></label><label>Bone Width<input id="implantWidth5" type="text"></label></div>
+              <div class="implant-row"><label>6. Tooth Number<input id="implantTooth6" type="text"></label><label>Bone Height<input id="implantHeight6" type="text"></label><label>Bone Width<input id="implantWidth6" type="text"></label></div>
+              <div class="implant-row"><label>7. Tooth Number<input id="implantTooth7" type="text"></label><label>Bone Height<input id="implantHeight7" type="text"></label><label>Bone Width<input id="implantWidth7" type="text"></label></div>
+              <div class="implant-row"><label>8. Tooth Number<input id="implantTooth8" type="text"></label><label>Bone Height<input id="implantHeight8" type="text"></label><label>Bone Width<input id="implantWidth8" type="text"></label></div>
+              <div class="implant-row"><label>9. Tooth Number<input id="implantTooth9" type="text"></label><label>Bone Height<input id="implantHeight9" type="text"></label><label>Bone Width<input id="implantWidth9" type="text"></label></div>
+              <div class="implant-row"><label>10. Tooth Number<input id="implantTooth10" type="text"></label><label>Bone Height<input id="implantHeight10" type="text"></label><label>Bone Width<input id="implantWidth10" type="text"></label></div>
+              <div class="implant-row"><label>11. Tooth Number<input id="implantTooth11" type="text"></label><label>Bone Height<input id="implantHeight11" type="text"></label><label>Bone Width<input id="implantWidth11" type="text"></label></div>
+              <div class="implant-row"><label>12. Tooth Number<input id="implantTooth12" type="text"></label><label>Bone Height<input id="implantHeight12" type="text"></label><label>Bone Width<input id="implantWidth12" type="text"></label></div>
+              <div class="implant-row"><label>13. Tooth Number<input id="implantTooth13" type="text"></label><label>Bone Height<input id="implantHeight13" type="text"></label><label>Bone Width<input id="implantWidth13" type="text"></label></div>
+              <div class="implant-row"><label>14. Tooth Number<input id="implantTooth14" type="text"></label><label>Bone Height<input id="implantHeight14" type="text"></label><label>Bone Width<input id="implantWidth14" type="text"></label></div>
+              <div class="implant-row"><label>15. Tooth Number<input id="implantTooth15" type="text"></label><label>Bone Height<input id="implantHeight15" type="text"></label><label>Bone Width<input id="implantWidth15" type="text"></label></div>
+              <div class="implant-row"><label>16. Tooth Number<input id="implantTooth16" type="text"></label><label>Bone Height<input id="implantHeight16" type="text"></label><label>Bone Width<input id="implantWidth16" type="text"></label></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Pterygoid Implants</legend>
+            <div class="grid two-col">
+              <label>Left implant details<input id="pterygoidLeft" type="text" placeholder="Notes on tooth number / dimensions"></label>
+              <label>Right implant details<input id="pterygoidRight" type="text" placeholder="Notes on tooth number / dimensions"></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Zygomatic Implants</legend>
+            <div class="grid two-col">
+              <label>Left implant details<input id="zygomaticLeft" type="text" placeholder="Notes on tooth number / dimensions"></label>
+              <label>Right implant details<input id="zygomaticRight" type="text" placeholder="Notes on tooth number / dimensions"></label>
+            </div>
+          </fieldset>
+
+          <label class="full-row">Additional Notes for Plan
+            <textarea id="planNotes" maxlength="3000" placeholder="Enter additional notes for plan"></textarea>
+            <span class="muted">Max. 3000 Characters</span>
+          </label>
+
+          <p class="full-row">Treatment is medically necessary for clinically significant functional impairment and terminal dentition with documented pain and loss of function. The treatment will provide the ability to select and chew foods normally and increase nutrition and healing.</p>
+
+          <fieldset class="full-row" data-required-group="necessityReasons">
+            <legend>This patient meets medical necessity for treatment of their</legend>
+            <label class="inline"><input type="checkbox" name="necessityReasons" value="infection"> infection</label>
+            <label class="inline"><input type="checkbox" name="necessityReasons" value="atrophy"> atrophy</label>
+            <label class="inline"><input type="checkbox" name="necessityReasons" value="orofacial pain"> orofacial pain</label>
+            <label class="inline"><input type="checkbox" name="necessityReasons" value="terminal dentition"> terminal dentition</label>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Prognosis for patient is</legend>
+            <label class="inline"><input type="radio" name="planPrognosis" value="Excellent"> Excellent</label>
+            <label class="inline"><input type="radio" name="planPrognosis" value="Good"> Good</label>
+            <label class="inline"><input type="radio" name="planPrognosis" value="Fair"> Fair</label>
+            <label class="inline"><input type="radio" name="planPrognosis" value="Guarded"> Guarded</label>
+          </fieldset>
+
+          <label>Follow-up interval<select id="followupInterval" required>
+            <option value="">Select</option>
+            <option>1 week</option>
+            <option>2 weeks</option>
+            <option>1 month</option>
+            <option>3 months</option>
+            <option>As needed</option>
+          </select></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="accordion" data-section="billing">
+      <header class="accordion-header">
+        <div>
+          <p class="eyebrow">Section 5</p>
+          <h3>Billing &amp; Authentication</h3>
+          <p class="muted">Visit type, coding, addendum, and signatures.</p>
+        </div>
+        <div class="status" id="status-billing">Incomplete</div>
+      </header>
+      <div class="accordion-body">
+        <div class="grid two-col">
+          <fieldset>
+            <legend>Visit Type (required)</legend>
+            <label class="inline"><input type="radio" name="visitType" value="No Charge" required> No Charge</label>
+            <label class="inline"><input type="radio" name="visitType" value="Insurance"> Insurance</label>
+          </fieldset>
+          <label>CPT / charge code<select id="billingCode" required>
+            <option value="">Select code</option>
+            <option>99203 - New patient, low complexity</option>
+            <option>99204 - New patient, moderate complexity</option>
+            <option>99213 - Established patient, low complexity</option>
+            <option>99214 - Established patient, moderate complexity</option>
+            <option>41899 - Unlisted procedure, dentoalveolar</option>
+            <option>21210 - Bone graft (mandible)</option>
+          </select></label>
+          <fieldset data-required-group="authNeeded">
+            <legend>Prior authorization</legend>
+            <label class="inline"><input type="radio" name="authNeeded" value="Requested"> Requested</label>
+            <label class="inline"><input type="radio" name="authNeeded" value="Not required"> Not required</label>
+            <label class="inline"><input type="radio" name="authNeeded" value="Pending"> Pending</label>
+          </fieldset>
+          <label>Add Addendum<textarea id="addendum" placeholder="Optional addendum"></textarea></label>
+          <fieldset class="full-row">
+            <legend>Attestation</legend>
+            <label class="inline"><input type="checkbox" id="attest" required> I attest that the information is accurate and complete.</label>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <section class="card preview">
+      <div class="preview-header">
+        <div>
+          <p class="eyebrow">Printable Note</p>
+          <h3>Live Preview</h3>
+          <p class="muted">Updates as you type. Use Print / Export to generate PDF.</p>
+        </div>
+        <div id="completionSummary" class="pill">0/5 sections complete</div>
+      </div>
+      <div id="previewContent" class="preview-content"></div>
+    </section>
+  </main>
+
+  <script src="note.js"></script>
+</body>
+</html>

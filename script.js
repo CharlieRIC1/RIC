@@ -1,162 +1,228 @@
-// FULLY RESTORED script.js (fixed missing curettage, copy button, selectedTeeth, and dynamic clearing)
-
-const boneGraftChart = document.getElementById("boneGraftChart");
-const curettageChart = document.getElementById("curettageChart");
-const boneGraftOutput = document.getElementById("boneGraftOutput");
-const curettageOutput = document.getElementById("curettageOutput");
-const clearBtn = document.getElementById("clearBtn");
-const toothPresentSwitch = document.getElementById("toothPresentSwitch");
-
-const toothNames = {
-  1: "right third molar", 2: "right second molar", 3: "right first molar", 4: "right second premolar", 5: "right first premolar",
-  6: "right canine", 7: "right lateral incisor", 8: "right central incisor", 9: "left central incisor", 10: "left lateral incisor",
-  11: "left canine", 12: "left first premolar", 13: "left second premolar", 14: "left first molar", 15: "left second molar",
-  16: "left third molar", 17: "left third molar", 18: "left second molar", 19: "left first molar", 20: "left second premolar",
-  21: "left first premolar", 22: "left canine", 23: "left lateral incisor", 24: "left central incisor", 25: "right central incisor",
-  26: "right lateral incisor", 27: "right canine", 28: "right first premolar", 29: "right second premolar", 30: "right first molar",
-  31: "right second molar", 32: "right third molar"
-};
-
-const graftingDescriptionsByTooth = {};
-for (let i = 1; i <= 32; i++) {
-  graftingDescriptionsByTooth[i] = [
-    `on the crestal defect of the ${toothNames[i]}`,
-    `on the crest and lateral ridge deficiency of the ${toothNames[i]}`,
-    `in the defect of the interalveolar septum of the ${toothNames[i]}`,
-    `on the lateral ridge defect of the ${toothNames[i]}`,
-    `in and on the lateral ridge defect of the ${toothNames[i]}`,
-    `lateral ridge defect of the ${toothNames[i]}`,
-    `in the deficiency of the interalveolar septum of the ${toothNames[i]}`,
-    `on the crest and lateral ridge deformity of the ${toothNames[i]}`,
-    `on the crest and lateral ridge defect of the ${toothNames[i]}`,
-    `in the deformity of the interalveolar septum of the ${toothNames[i]}`
-  ];
-}
-
-const curettageStructures = [
-  "in the apex of the {tooth}",
-  "apical to the {tooth}",
-  "apical and lateral to the {tooth}",
-  "medial to the apex of the {tooth}",
-  "lateral to the apex of the {tooth}",
-  "{tooth} apex"
+const demoUser = { username: 'provider', password: 'care' };
+const requiredFields = [
+  'patientName', 'patientDob', 'dateOfService', 'timeOfService', 'mrn', 'location', 'referring', 'supervising',
+  'chiefComplaint', 'hpi', 'psh', 'symptoms',
+  'vitals', 'exam', 'diagnostics', 'functional',
+  'assessment', 'diagnoses', 'necessity',
+  'planGoals', 'planSteps', 'planVerification', 'prognosis'
 ];
 
-let selectedTeeth = { boneGraft: new Set(), curettage: new Set() };
-let previousDescriptions = {};
+const sections = ['subjective', 'objective', 'assessment', 'plan', 'billing'];
 
-function getRandomElement(array) {
-  return array && array.length > 0 ? array[Math.floor(Math.random() * array.length)] : "";
+const loginGate = document.getElementById('loginGate');
+const app = document.getElementById('app');
+const loginForm = document.getElementById('loginForm');
+const saveDraft = document.getElementById('saveDraft');
+const printNote = document.getElementById('printNote');
+const logout = document.getElementById('logout');
+const completionSummary = document.getElementById('completionSummary');
+const previewContent = document.getElementById('previewContent');
+
+function getFormData() {
+  const data = {};
+  requiredFields.forEach(id => {
+    const element = document.getElementById(id);
+    data[id] = element ? element.value : '';
+  });
+  const visitType = document.querySelector('input[name="visitType"]:checked');
+  data.visitType = visitType ? visitType.value : '';
+  data.addendum = document.getElementById('addendum').value || '';
+  data.attest = document.getElementById('attest').checked;
+  return data;
 }
 
-function createDescriptionCard(tooth, type, container) {
-  const toothName = toothNames[tooth] || `Tooth ${tooth}`;
-  let descriptionText = "";
-
-  if (type === "boneGraft") {
-    const allDescriptions = graftingDescriptionsByTooth[tooth] || [];
-    let availableDescriptions;
-
-    if (toothPresentSwitch.checked) {
-      availableDescriptions = allDescriptions;
-    } else {
-      availableDescriptions = allDescriptions.filter((desc, idx) => ![2, 6, 9].includes(idx));
-    }
-
-    descriptionText = getRandomElement(availableDescriptions);
-  } else if (type === "curettage") {
-    const structure = getRandomElement(curettageStructures);
-    descriptionText = structure.replace(/{tooth}/g, toothName);
-  }
-
-  previousDescriptions[tooth] = descriptionText;
-
-  const card = document.createElement("div");
-  card.classList.add("output-card");
-  card.setAttribute("data-tooth", tooth);
-  card.style.background = toothPresentSwitch.checked 
-    ? "linear-gradient(135deg, #d0f0fd, #e0f7fa)" 
-    : "linear-gradient(135deg, #ffd6d6, #ffe0e0)";
-  card.style.borderRadius = "12px";
-  card.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
-  card.style.padding = "16px";
-  card.style.marginBottom = "12px";
-  card.style.transition = "transform 0.3s ease, box-shadow 0.3s ease";
-
-  card.addEventListener("mouseenter", () => {
-    card.style.transform = "scale(1.03)";
-    card.style.boxShadow = "0 6px 12px rgba(0, 0, 0, 0.15)";
-  });
-
-  card.addEventListener("mouseleave", () => {
-    card.style.transform = "scale(1)";
-    card.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
-  });
-
-  card.innerHTML = `
-    <span class="tooth-number">${tooth}</span>
-    <span class="description-text">${descriptionText}</span>
-    <button class="copy-btn">Copy</button>
-  `;
-
-  const copyBtn = card.querySelector(".copy-btn");
-  copyBtn.addEventListener("click", () => {
-    navigator.clipboard.writeText(descriptionText).then(() => {
-      copyBtn.textContent = "Copied!";
-      copyBtn.style.backgroundColor = "#28a745";
-      copyBtn.disabled = true;
-    });
-  });
-
-  container.appendChild(card);
-}
-
-function removeDescriptionCard(tooth, container) {
-  const cards = container.querySelectorAll(".output-card");
-  cards.forEach(card => {
-    if (card.getAttribute("data-tooth") == tooth) {
-      card.remove();
-    }
-  });
-  delete previousDescriptions[tooth];
-}
-
-function clearOutputs() {
-  selectedTeeth.boneGraft.clear();
-  selectedTeeth.curettage.clear();
-
-  document.querySelectorAll(".tooth").forEach(button => button.classList.remove("selected"));
-
-  boneGraftOutput.innerHTML = "";
-  curettageOutput.innerHTML = "";
-
-  previousDescriptions = {};
-}
-
-clearBtn.addEventListener("click", clearOutputs);
-
-function createToothChart(chart, type, outputContainer) {
-  chart.style.gridTemplateColumns = "repeat(11, 1fr)";
-  for (let i = 1; i <= 32; i++) {
-    const btn = document.createElement("div");
-    btn.classList.add("tooth");
-    btn.textContent = i;
-
-    btn.addEventListener("click", () => {
-      if (selectedTeeth[type].has(i)) {
-        selectedTeeth[type].delete(i);
-        btn.classList.remove("selected");
-        removeDescriptionCard(i, outputContainer);
+function populateForm(data) {
+  if (!data) return;
+  Object.keys(data).forEach(key => {
+    const el = document.getElementById(key);
+    if (el) {
+      if (el.type === 'checkbox') {
+        el.checked = data[key];
       } else {
-        selectedTeeth[type].add(i);
-        btn.classList.add("selected");
-        createDescriptionCard(i, type, outputContainer);
+        el.value = data[key];
+      }
+    }
+  });
+  if (data.visitType) {
+    const radio = document.querySelector(`input[name="visitType"][value="${data.visitType}"]`);
+    if (radio) radio.checked = true;
+  }
+}
+
+function saveToLocalStorage() {
+  const payload = getFormData();
+  localStorage.setItem('ric-note-data', JSON.stringify(payload));
+}
+
+function loadFromLocalStorage() {
+  const stored = localStorage.getItem('ric-note-data');
+  if (stored) {
+    populateForm(JSON.parse(stored));
+    validateAllSections();
+    renderPreview();
+  }
+}
+
+function authenticate(username, password) {
+  return username === demoUser.username && password === demoUser.password;
+}
+
+loginForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value.trim();
+
+  if (authenticate(username, password)) {
+    localStorage.setItem('ric-auth', 'true');
+    loginGate.classList.add('hidden');
+    app.classList.remove('hidden');
+    loadFromLocalStorage();
+  } else {
+    alert('Invalid credentials. Use provider / care for demo access.');
+  }
+});
+
+logout.addEventListener('click', () => {
+  localStorage.removeItem('ric-auth');
+  app.classList.add('hidden');
+  loginGate.classList.remove('hidden');
+});
+
+saveDraft.addEventListener('click', () => {
+  saveToLocalStorage();
+  alert('Draft saved locally on this device.');
+});
+
+printNote.addEventListener('click', () => {
+  if (validateAllSections(true)) {
+    window.print();
+  }
+});
+
+function validateSection(section) {
+  let valid = true;
+  const sectionEl = document.querySelector(`[data-section="${section}"]`);
+  const statusEl = document.getElementById(`status-${section}`);
+
+  if (section === 'billing') {
+    const visitType = document.querySelector('input[name="visitType"]:checked');
+    const attest = document.getElementById('attest').checked;
+    valid = Boolean(visitType) && attest;
+  } else {
+    const fields = sectionEl.querySelectorAll('[required]');
+    fields.forEach(field => {
+      if (!field.value.trim()) {
+        valid = false;
       }
     });
-
-    chart.appendChild(btn);
   }
+
+  statusEl.textContent = valid ? 'Complete' : 'Incomplete';
+  statusEl.classList.toggle('complete', valid);
+  return valid;
 }
 
-createToothChart(boneGraftChart, "boneGraft", boneGraftOutput);
-createToothChart(curettageChart, "curettage", curettageOutput);
+function validateAllSections(showAlerts = false) {
+  let complete = 0;
+  let allValid = true;
+  sections.forEach(section => {
+    const valid = validateSection(section);
+    if (valid) complete += 1; else allValid = false;
+  });
+  completionSummary.textContent = `${complete}/${sections.length} sections complete`;
+  if (showAlerts && !allValid) {
+    alert('Please complete all required sections before printing.');
+  }
+  return allValid;
+}
+
+function renderPreview() {
+  const data = getFormData();
+  const visitLabel = data.visitType || '—';
+  const attestLabel = data.attest ? 'Yes' : 'No';
+
+  previewContent.innerHTML = `
+    <div class="preview-grid">
+      <div>
+        <p class="eyebrow">Patient</p>
+        <p><strong>${data.patientName || '—'}</strong></p>
+        <p>DOB: ${data.patientDob || '—'}</p>
+        <p>DOS: ${data.dateOfService || '—'} @ ${data.timeOfService || '—'}</p>
+        <p>MRN: ${data.mrn || '—'}</p>
+        <p>Location: ${data.location || '—'}</p>
+      </div>
+      <div>
+        <p class="eyebrow">Providers</p>
+        <p>Referring: ${data.referring || '—'}</p>
+        <p>Supervising: ${data.supervising || '—'}</p>
+        <p>Visit type: ${visitLabel}</p>
+        <p>Attested: ${attestLabel}</p>
+      </div>
+    </div>
+    <div class="preview-columns">
+      <div>
+        <h4>Subjective</h4>
+        <p><strong>Chief Complaint</strong><br>${data.chiefComplaint || '—'}</p>
+        <p><strong>HPI</strong><br>${data.hpi || '—'}</p>
+        <p><strong>Past Surgical History</strong><br>${data.psh || '—'}</p>
+        <p><strong>Symptoms</strong><br>${data.symptoms || '—'}</p>
+      </div>
+      <div>
+        <h4>Objective</h4>
+        <p><strong>Vitals</strong><br>${data.vitals || '—'}</p>
+        <p><strong>Exam</strong><br>${data.exam || '—'}</p>
+        <p><strong>Diagnostics</strong><br>${data.diagnostics || '—'}</p>
+        <p><strong>Functional Impact</strong><br>${data.functional || '—'}</p>
+      </div>
+    </div>
+    <div class="preview-columns">
+      <div>
+        <h4>Assessment</h4>
+        <p>${data.assessment || '—'}</p>
+        <p><strong>Diagnoses / Codes</strong><br>${data.diagnoses || '—'}</p>
+        <p><strong>Medical Necessity</strong><br>${data.necessity || '—'}</p>
+      </div>
+      <div>
+        <h4>Plan</h4>
+        <p><strong>Goals</strong><br>${data.planGoals || '—'}</p>
+        <p><strong>Steps</strong><br>${data.planSteps || '—'}</p>
+        <p><strong>Verification</strong><br>${data.planVerification || '—'}</p>
+        <p><strong>Prognosis</strong><br>${data.prognosis || '—'}</p>
+        <p><strong>Notes</strong><br>${data.planNotes || '—'}</p>
+        <p><strong>Addendum</strong><br>${data.addendum || '—'}</p>
+      </div>
+    </div>
+  `;
+}
+
+function handleAccordion() {
+  document.querySelectorAll('.accordion-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const body = header.nextElementSibling;
+      body.classList.toggle('open');
+    });
+  });
+}
+
+function bindFormListeners() {
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', () => {
+      validateAllSections();
+      renderPreview();
+    });
+    el.addEventListener('blur', saveToLocalStorage);
+  });
+}
+
+(function bootstrap() {
+  handleAccordion();
+  bindFormListeners();
+  renderPreview();
+  validateAllSections();
+
+  if (localStorage.getItem('ric-auth') === 'true') {
+    loginGate.classList.add('hidden');
+    app.classList.remove('hidden');
+    loadFromLocalStorage();
+  }
+})();

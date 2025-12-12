@@ -89,7 +89,7 @@ textarea { min-height: 110px; resize: vertical; }
 section.accordion { border: 1px solid var(--border); border-radius: 16px; background: var(--card); overflow: hidden; }
 .accordion-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; cursor: pointer; background: linear-gradient(90deg, #fff, #f8fbff); border-bottom: 1px solid var(--border); }
 .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-.accordion-body.open { max-height: 900px; padding: 16px 20px 20px; }
+.accordion-body.open { max-height: 2000px; padding: 16px 20px 20px; }
 .status { padding: 6px 12px; border-radius: 999px; background: #ffe8d4; color: var(--orange); font-weight: 700; }
 .status.complete { background: #ddf4e4; color: #1f8a4d; }
 
@@ -103,6 +103,64 @@ label.inline { display: inline-flex; align-items: center; gap: 6px; margin-right
 .preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; background: var(--sand); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
 .preview-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
 .pill { background: #e6f2fb; color: var(--blue); padding: 8px 12px; border-radius: 999px; font-weight: 700; }
+
+.records-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.records-grid p {
+  margin: 0 0 8px;
+}
+
+.procedure-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.procedure-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.procedure-line input[type="number"] {
+  width: 120px;
+}
+
+.inline-checks {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.implant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px;
+}
+
+.implant-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 8px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+
+.implant-row label {
+  font-weight: 500;
+}
+
+.occlusal label.inline {
+  margin-right: 16px;
+}
 
 .overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); z-index: 20; }
 .overlay.hidden { display: none; }
