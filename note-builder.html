@@ -69,7 +69,7 @@
         <div>
           <p class="eyebrow">Section 1</p>
           <h3>Subjective</h3>
-          <p class="muted">Chief complaints, history, and symptoms.</p>
+          <p class="muted">Chief complaints, history, symptom checklist, and pain profile.</p>
         </div>
         <div class="status" id="status-subjective">Incomplete</div>
       </header>
@@ -77,8 +77,37 @@
         <div class="grid two-col">
           <label>Chief Complaint<textarea id="chiefComplaint" required placeholder="Patient reports..."></textarea></label>
           <label>History of Present Illness<textarea id="hpi" required placeholder="Duration, triggers, prior treatments..."></textarea></label>
-          <label>Past Surgical History<textarea id="psh" required></textarea></label>
-          <label>Symptoms<textarea id="symptoms" required></textarea></label>
+          <label>Past Surgical History<textarea id="psh" required placeholder="Relevant surgeries"></textarea></label>
+          <fieldset data-required-group="symptoms">
+            <legend>Symptom checklist (select all that apply)</legend>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Pain"> Pain</label>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Swelling"> Swelling</label>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Limited opening"> Limited opening</label>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Clicking / popping"> Clicking / popping</label>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Locking episodes"> Locking episodes</label>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Headaches"> Headaches</label>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Ear pain / fullness"> Ear pain / fullness</label>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Numbness / tingling"> Numbness / tingling</label>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Fatigue"> Fatigue</label>
+            <label class="inline"><input type="checkbox" name="symptoms" value="Other"> Other</label>
+            <label class="full-row">If "Other", describe<textarea id="symptomOther" placeholder="Optional"></textarea></label>
+          </fieldset>
+          <div class="grid two-col">
+            <label>Duration (years)<input required id="symptomDurationYears" type="number" min="0" placeholder="e.g., 1"></label>
+            <label>Duration (months)<input id="symptomDurationMonths" type="number" min="0" max="11" placeholder="0-11"></label>
+          </div>
+          <label>Pain severity (0-10)
+            <input required id="painScore" type="range" min="0" max="10" value="0">
+            <span class="muted" id="painScoreValue">0/10</span>
+          </label>
+          <fieldset data-required-group="painPattern">
+            <legend>Pain pattern</legend>
+            <label class="inline"><input type="radio" name="painPattern" value="Intermittent"> Intermittent</label>
+            <label class="inline"><input type="radio" name="painPattern" value="Constant"> Constant</label>
+            <label class="inline"><input type="radio" name="painPattern" value="Post-operative"> Post-operative</label>
+            <label class="inline"><input type="radio" name="painPattern" value="None"> None</label>
+          </fieldset>
+          <label class="full-row">Symptom notes<textarea id="symptomNotes" placeholder="Optional"></textarea></label>
         </div>
       </div>
     </section>
@@ -88,16 +117,36 @@
         <div>
           <p class="eyebrow">Section 2</p>
           <h3>Objective</h3>
-          <p class="muted">Vitals, exam findings, diagnostics.</p>
+          <p class="muted">Vitals, focused exam findings, imaging, and diagnostics.</p>
         </div>
         <div class="status" id="status-objective">Incomplete</div>
       </header>
       <div class="accordion-body">
         <div class="grid two-col">
-          <label>Vitals<textarea id="vitals" required placeholder="BP, HR, SpO2, BMI..."></textarea></label>
-          <label>Physical Exam<textarea id="exam" required></textarea></label>
-          <label>Imaging &amp; Diagnostics<textarea id="diagnostics" required></textarea></label>
-          <label>Functional Impact<textarea id="functional" required></textarea></label>
+          <label>Blood Pressure<input required id="bp" placeholder="e.g., 120/80"></label>
+          <label>Heart Rate<input required id="heartRate" type="number" min="0" placeholder="bpm"></label>
+          <label>SpO₂<input required id="spo2" type="number" min="0" max="100" placeholder="%"></label>
+          <label>BMI<input id="bmi" type="number" step="0.1" min="0" placeholder="kg/m²"></label>
+          <fieldset data-required-group="examFinding">
+            <legend>Exam findings (select all that apply)</legend>
+            <label class="inline"><input type="checkbox" name="examFinding" value="Edema"> Edema</label>
+            <label class="inline"><input type="checkbox" name="examFinding" value="Erythema"> Erythema</label>
+            <label class="inline"><input type="checkbox" name="examFinding" value="Drainage / infection"> Drainage / infection</label>
+            <label class="inline"><input type="checkbox" name="examFinding" value="Limited opening / trismus"> Limited opening / trismus</label>
+            <label class="inline"><input type="checkbox" name="examFinding" value="Joint sounds"> Joint sounds</label>
+            <label class="inline"><input type="checkbox" name="examFinding" value="Prosthesis mobility"> Prosthesis mobility</label>
+            <label class="inline"><input type="checkbox" name="examFinding" value="Occlusal change"> Occlusal change</label>
+          </fieldset>
+          <label>Imaging reviewed<select id="imaging" required>
+            <option value="">Select study</option>
+            <option>Panoramic</option>
+            <option>CBCT</option>
+            <option>Periapical</option>
+            <option>MRI</option>
+            <option>None</option>
+          </select></label>
+          <label class="full-row">Imaging &amp; diagnostics<textarea id="diagnostics" required placeholder="Key findings"></textarea></label>
+          <label class="full-row">Functional impact<textarea id="functional" required placeholder="Effect on chewing, speech, quality of life"></textarea></label>
         </div>
       </div>
     </section>
@@ -107,15 +156,33 @@
         <div>
           <p class="eyebrow">Section 3</p>
           <h3>Assessment</h3>
-          <p class="muted">Narrative assessment and ICD/CPT context.</p>
+          <p class="muted">Primary diagnosis, supporting diagnoses, and medical necessity.</p>
         </div>
         <div class="status" id="status-assessment">Incomplete</div>
       </header>
       <div class="accordion-body">
         <div class="grid two-col">
-          <label>Assessment Narrative<textarea id="assessment" required></textarea></label>
-          <label>Diagnoses / Codes<textarea id="diagnoses" required placeholder="e.g., Masticatory muscle pain (ICD10), CPT 99204"></textarea></label>
-          <label class="full-row">Medical Necessity<textarea id="necessity" required placeholder="Document functional impairment and rationale"></textarea></label>
+          <label>Primary diagnosis<select id="primaryDiagnosis" required>
+            <option value="">Select diagnosis</option>
+            <option>Temporomandibular joint disorder</option>
+            <option>Myofascial pain dysfunction</option>
+            <option>Neuropathic facial pain</option>
+            <option>Post-surgical reconstruction</option>
+            <option>Implant complication</option>
+            <option>Osteomyelitis</option>
+            <option>Other</option>
+          </select></label>
+          <fieldset data-required-group="supportingDiagnosis">
+            <legend>Supporting diagnoses</legend>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Chronic pain"> Chronic pain</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Sleep disordered breathing"> Sleep disordered breathing</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Malocclusion"> Malocclusion</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Muscle spasm"> Muscle spasm</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Sinus involvement"> Sinus involvement</label>
+            <label class="inline"><input type="checkbox" name="supportingDiagnosis" value="Soft tissue defect"> Soft tissue defect</label>
+          </fieldset>
+          <label class="full-row">Assessment narrative<textarea id="assessment" required placeholder="Clinical reasoning"></textarea></label>
+          <label class="full-row">Medical necessity<textarea id="necessity" required placeholder="Functional impairment and rationale"></textarea></label>
         </div>
       </div>
     </section>
@@ -125,15 +192,39 @@
         <div>
           <p class="eyebrow">Section 4</p>
           <h3>Plan</h3>
-          <p class="muted">Treatment plan, verification, and prognostic outlook.</p>
+          <p class="muted">Treatment plan, procedural options, and prognostic outlook.</p>
         </div>
         <div class="status" id="status-plan">Incomplete</div>
       </header>
       <div class="accordion-body">
         <div class="grid two-col">
-          <label>Treatment Goals<textarea id="planGoals" required placeholder="Restore function, reduce pain..."></textarea></label>
-          <label>Treatment Steps<textarea id="planSteps" required placeholder="Bone grafting, implant placement..."></textarea></label>
-          <label>Treatment Verification<textarea id="planVerification" required placeholder="Discussed alternatives, patient consent..."></textarea></label>
+          <label>Treatment goals<textarea id="planGoals" required placeholder="Restore function, reduce pain..."></textarea></label>
+          <fieldset data-required-group="planProcedures">
+            <legend>Planned procedures</legend>
+            <label class="inline"><input type="checkbox" name="planProcedures" value="Bone graft"> Bone graft</label>
+            <label class="inline"><input type="checkbox" name="planProcedures" value="Implant placement"> Implant placement</label>
+            <label class="inline"><input type="checkbox" name="planProcedures" value="Excision / curettage"> Excision / curettage</label>
+            <label class="inline"><input type="checkbox" name="planProcedures" value="Soft tissue reconstruction"> Soft tissue reconstruction</label>
+            <label class="inline"><input type="checkbox" name="planProcedures" value="Orthognathic surgery"> Orthognathic surgery</label>
+            <label class="inline"><input type="checkbox" name="planProcedures" value="Splint / orthotic"> Splint / orthotic</label>
+          </fieldset>
+          <fieldset>
+            <legend>Adjunctive management</legend>
+            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Medication"> Medication</label>
+            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Physical therapy"> Physical therapy</label>
+            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Behavioral modification"> Behavioral modification</label>
+            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Nutrition counseling"> Nutrition counseling</label>
+            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Sleep hygiene"> Sleep hygiene</label>
+          </fieldset>
+          <label class="full-row">Treatment verification<textarea id="planVerification" required placeholder="Discussed alternatives, patient consent..."></textarea></label>
+          <label>Follow-up interval<select id="followupInterval" required>
+            <option value="">Select</option>
+            <option>1 week</option>
+            <option>2 weeks</option>
+            <option>1 month</option>
+            <option>3 months</option>
+            <option>As needed</option>
+          </select></label>
           <label>Prognosis<select id="prognosis" required>
             <option value="">Select</option>
             <option>Excellent</option>
@@ -141,7 +232,7 @@
             <option>Fair</option>
             <option>Guarded</option>
           </select></label>
-          <label class="full-row">Additional Notes<textarea id="planNotes" placeholder="Optional"></textarea></label>
+          <label class="full-row">Additional notes<textarea id="planNotes" placeholder="Optional"></textarea></label>
         </div>
       </div>
     </section>
@@ -151,7 +242,7 @@
         <div>
           <p class="eyebrow">Section 5</p>
           <h3>Billing &amp; Authentication</h3>
-          <p class="muted">Visit type, addendum, and signatures.</p>
+          <p class="muted">Visit type, coding, addendum, and signatures.</p>
         </div>
         <div class="status" id="status-billing">Incomplete</div>
       </header>
@@ -161,6 +252,21 @@
             <legend>Visit Type (required)</legend>
             <label class="inline"><input type="radio" name="visitType" value="No Charge" required> No Charge</label>
             <label class="inline"><input type="radio" name="visitType" value="Insurance"> Insurance</label>
+          </fieldset>
+          <label>CPT / charge code<select id="billingCode" required>
+            <option value="">Select code</option>
+            <option>99203 - New patient, low complexity</option>
+            <option>99204 - New patient, moderate complexity</option>
+            <option>99213 - Established patient, low complexity</option>
+            <option>99214 - Established patient, moderate complexity</option>
+            <option>41899 - Unlisted procedure, dentoalveolar</option>
+            <option>21210 - Bone graft (mandible)</option>
+          </select></label>
+          <fieldset data-required-group="authNeeded">
+            <legend>Prior authorization</legend>
+            <label class="inline"><input type="radio" name="authNeeded" value="Requested"> Requested</label>
+            <label class="inline"><input type="radio" name="authNeeded" value="Not required"> Not required</label>
+            <label class="inline"><input type="radio" name="authNeeded" value="Pending"> Pending</label>
           </fieldset>
           <label>Add Addendum<textarea id="addendum" placeholder="Optional addendum"></textarea></label>
           <fieldset class="full-row">

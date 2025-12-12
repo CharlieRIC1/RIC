@@ -1,10 +1,10 @@
 const demoUser = { username: 'provider', password: 'care' };
 const requiredFields = [
   'patientName', 'patientDob', 'dateOfService', 'timeOfService', 'mrn', 'location', 'referring', 'supervising',
-  'chiefComplaint', 'hpi', 'psh', 'symptoms',
-  'vitals', 'exam', 'diagnostics', 'functional',
-  'assessment', 'diagnoses', 'necessity',
-  'planGoals', 'planSteps', 'planVerification', 'prognosis'
+  'chiefComplaint', 'hpi', 'psh', 'symptomDurationYears', 'painScore',
+  'bp', 'heartRate', 'spo2', 'diagnostics', 'functional', 'imaging',
+  'primaryDiagnosis', 'assessment', 'necessity',
+  'planGoals', 'planVerification', 'followupInterval', 'prognosis', 'billingCode'
 ];
 
 const sections = ['subjective', 'objective', 'assessment', 'plan', 'billing'];
@@ -26,8 +26,18 @@ function getFormData() {
   });
   const visitType = document.querySelector('input[name="visitType"]:checked');
   data.visitType = visitType ? visitType.value : '';
+  const painPattern = document.querySelector('input[name="painPattern"]:checked');
+  data.painPattern = painPattern ? painPattern.value : '';
   data.addendum = document.getElementById('addendum').value || '';
   data.attest = document.getElementById('attest').checked;
+  data.symptoms = getCheckedValues('symptoms');
+  data.symptomOther = document.getElementById('symptomOther').value || '';
+  data.examFinding = getCheckedValues('examFinding');
+  data.supportingDiagnosis = getCheckedValues('supportingDiagnosis');
+  data.planProcedures = getCheckedValues('planProcedures');
+  data.planAdjuncts = getCheckedValues('planAdjuncts');
+  const authNeeded = document.querySelector('input[name="authNeeded"]:checked');
+  data.authNeeded = authNeeded ? authNeeded.value : '';
   return data;
 }
 
@@ -42,9 +52,22 @@ function populateForm(data) {
         el.value = data[key];
       }
     }
+    if (['symptoms', 'examFinding', 'supportingDiagnosis', 'planProcedures', 'planAdjuncts'].includes(key)) {
+      document.querySelectorAll(`input[name="${key}"]`).forEach(input => {
+        input.checked = Array.isArray(data[key]) && data[key].includes(input.value);
+      });
+    }
   });
   if (data.visitType) {
     const radio = document.querySelector(`input[name="visitType"][value="${data.visitType}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (data.painPattern) {
+    const radio = document.querySelector(`input[name="painPattern"][value="${data.painPattern}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (data.authNeeded) {
+    const radio = document.querySelector(`input[name="authNeeded"][value="${data.authNeeded}"]`);
     if (radio) radio.checked = true;
   }
 }
@@ -60,6 +83,7 @@ function loadFromLocalStorage() {
     populateForm(JSON.parse(stored));
     validateAllSections();
     renderPreview();
+    syncPainScoreLabel();
   }
 }
 
@@ -107,13 +131,23 @@ function validateSection(section) {
   if (section === 'billing') {
     const visitType = document.querySelector('input[name="visitType"]:checked');
     const attest = document.getElementById('attest').checked;
-    valid = Boolean(visitType) && attest;
+    const billingCode = document.getElementById('billingCode').value.trim();
+    const authNeeded = document.querySelector('input[name="authNeeded"]:checked');
+    valid = Boolean(visitType) && attest && billingCode && authNeeded;
   } else {
     const fields = sectionEl.querySelectorAll('[required]');
     fields.forEach(field => {
       if (!field.value.trim()) {
         valid = false;
       }
+    });
+    const requiredGroups = sectionEl.querySelectorAll('[data-required-group]');
+    requiredGroups.forEach(group => {
+      const name = group.dataset.requiredGroup;
+      const anyChecked = group.querySelectorAll(`input[name="${name}"]`).length
+        ? Array.from(group.querySelectorAll(`input[name="${name}"]`)).some(input => input.checked)
+        : false;
+      if (!anyChecked) valid = false;
     });
   }
 
@@ -140,6 +174,10 @@ function renderPreview() {
   const data = getFormData();
   const visitLabel = data.visitType || '—';
   const attestLabel = data.attest ? 'Yes' : 'No';
+  const painPatternLabel = data.painPattern || '—';
+  const authLabel = data.authNeeded || '—';
+
+  const listOrDash = list => (list && list.length ? list.join(', ') : '—');
 
   previewContent.innerHTML = `
     <div class="preview-grid">
@@ -156,6 +194,8 @@ function renderPreview() {
         <p>Referring: ${data.referring || '—'}</p>
         <p>Supervising: ${data.supervising || '—'}</p>
         <p>Visit type: ${visitLabel}</p>
+        <p>CPT: ${data.billingCode || '—'}</p>
+        <p>Prior auth: ${authLabel}</p>
         <p>Attested: ${attestLabel}</p>
       </div>
     </div>
@@ -165,12 +205,16 @@ function renderPreview() {
         <p><strong>Chief Complaint</strong><br>${data.chiefComplaint || '—'}</p>
         <p><strong>HPI</strong><br>${data.hpi || '—'}</p>
         <p><strong>Past Surgical History</strong><br>${data.psh || '—'}</p>
-        <p><strong>Symptoms</strong><br>${data.symptoms || '—'}</p>
+        <p><strong>Symptoms</strong><br>${listOrDash(data.symptoms)}</p>
+        <p><strong>Symptom duration</strong><br>${data.symptomDurationYears || '0'} years ${data.symptomDurationMonths || '0'} months</p>
+        <p><strong>Pain severity</strong><br>${data.painScore || '—'}/10 (${painPatternLabel})</p>
+        <p><strong>Symptom notes</strong><br>${data.symptomNotes || data.symptomOther || '—'}</p>
       </div>
       <div>
         <h4>Objective</h4>
-        <p><strong>Vitals</strong><br>${data.vitals || '—'}</p>
-        <p><strong>Exam</strong><br>${data.exam || '—'}</p>
+        <p><strong>Vitals</strong><br>BP ${data.bp || '—'}, HR ${data.heartRate || '—'} bpm, SpO₂ ${data.spo2 || '—'}%, BMI ${data.bmi || '—'}</p>
+        <p><strong>Exam findings</strong><br>${listOrDash(data.examFinding)}</p>
+        <p><strong>Imaging</strong><br>${data.imaging || '—'}</p>
         <p><strong>Diagnostics</strong><br>${data.diagnostics || '—'}</p>
         <p><strong>Functional Impact</strong><br>${data.functional || '—'}</p>
       </div>
@@ -178,15 +222,18 @@ function renderPreview() {
     <div class="preview-columns">
       <div>
         <h4>Assessment</h4>
-        <p>${data.assessment || '—'}</p>
-        <p><strong>Diagnoses / Codes</strong><br>${data.diagnoses || '—'}</p>
+        <p><strong>Primary diagnosis</strong><br>${data.primaryDiagnosis || '—'}</p>
+        <p><strong>Supporting diagnoses</strong><br>${listOrDash(data.supportingDiagnosis)}</p>
+        <p><strong>Assessment narrative</strong><br>${data.assessment || '—'}</p>
         <p><strong>Medical Necessity</strong><br>${data.necessity || '—'}</p>
       </div>
       <div>
         <h4>Plan</h4>
         <p><strong>Goals</strong><br>${data.planGoals || '—'}</p>
-        <p><strong>Steps</strong><br>${data.planSteps || '—'}</p>
+        <p><strong>Procedures</strong><br>${listOrDash(data.planProcedures)}</p>
+        <p><strong>Adjuncts</strong><br>${listOrDash(data.planAdjuncts)}</p>
         <p><strong>Verification</strong><br>${data.planVerification || '—'}</p>
+        <p><strong>Follow-up</strong><br>${data.followupInterval || '—'}</p>
         <p><strong>Prognosis</strong><br>${data.prognosis || '—'}</p>
         <p><strong>Notes</strong><br>${data.planNotes || '—'}</p>
         <p><strong>Addendum</strong><br>${data.addendum || '—'}</p>
@@ -217,12 +264,27 @@ function bindFormListeners() {
 (function bootstrap() {
   handleAccordion();
   bindFormListeners();
-  renderPreview();
-  validateAllSections();
+      renderPreview();
+      validateAllSections();
 
   if (localStorage.getItem('ric-auth') === 'true') {
     loginGate.classList.add('hidden');
     app.classList.remove('hidden');
     loadFromLocalStorage();
   }
+  document.getElementById('painScore').addEventListener('input', (e) => {
+    document.getElementById('painScoreValue').textContent = `${e.target.value}/10`;
+  });
+  syncPainScoreLabel();
 })();
+
+function getCheckedValues(name) {
+  return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(input => input.value);
+}
+
+function syncPainScoreLabel() {
+  const slider = document.getElementById('painScore');
+  if (slider) {
+    document.getElementById('painScoreValue').textContent = `${slider.value}/10`;
+  }
+}
