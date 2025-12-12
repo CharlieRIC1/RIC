@@ -408,25 +408,120 @@
       </header>
       <div class="accordion-body">
         <div class="grid two-col">
-          <label>Treatment goals<textarea id="planGoals" required placeholder="Restore function, reduce pain..."></textarea></label>
-          <fieldset data-required-group="planProcedures">
-            <legend>Planned procedures</legend>
-            <label class="inline"><input type="checkbox" name="planProcedures" value="Bone graft"> Bone graft</label>
-            <label class="inline"><input type="checkbox" name="planProcedures" value="Implant placement"> Implant placement</label>
-            <label class="inline"><input type="checkbox" name="planProcedures" value="Excision / curettage"> Excision / curettage</label>
-            <label class="inline"><input type="checkbox" name="planProcedures" value="Soft tissue reconstruction"> Soft tissue reconstruction</label>
-            <label class="inline"><input type="checkbox" name="planProcedures" value="Orthognathic surgery"> Orthognathic surgery</label>
-            <label class="inline"><input type="checkbox" name="planProcedures" value="Splint / orthotic"> Splint / orthotic</label>
+          <label class="full-row">Treatment goals
+            <textarea id="planGoals" required>Restore physiological function, reduce pain, and restore activities of daily living. Treatment goals aim to decrease pain so that normal modalities of lifestyle are achievable.</textarea>
+          </label>
+          <fieldset class="full-row" data-required-group="planProcedures">
+            <legend>The treatment plan consists of</legend>
+            <div class="procedure-grid">
+              <label class="procedure-line"><input type="checkbox" id="planGraftMaxilla" name="planProcedures" value="Bone grafting (includes obtaining graft), maxilla (CPT 21210)" data-units-id="unitGraftMaxilla"> Bone grafting (includes obtaining graft), maxilla (CPT 21210) <input type="number" id="unitGraftMaxilla" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planGraftMandible" name="planProcedures" value="Bone grafting (includes obtaining graft), mandible (CPT 21215)" data-units-id="unitGraftMandible"> Bone grafting (includes obtaining graft), mandible (CPT 21215) <input type="number" id="unitGraftMandible" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planReconMaxilla" name="planProcedures" value="Reconstruction of maxilla, endosteal, complete (CPT 21249)" data-units-id="unitReconMaxilla"> Reconstruction of maxilla, endosteal, complete (CPT 21249) <input type="number" id="unitReconMaxilla" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planReconMandible" name="planProcedures" value="Reconstruction of mandible, endosteal, complete (CPT 21246)" data-units-id="unitReconMandible"> Reconstruction of mandible, endosteal, complete (CPT 21246) <input type="number" id="unitReconMandible" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planCurettageMaxilla" name="planProcedures" value="Curettage of infected soft tissue(s), maxilla (CPT 21060)" data-units-id="unitCurettageMaxilla"> Curettage of infected soft tissue(s), maxilla (CPT 21060) <input type="number" id="unitCurettageMaxilla" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planCurettageMandible" name="planProcedures" value="Curettage of infected soft tissue(s), mandible (CPT 21040)" data-units-id="unitCurettageMandible"> Curettage of infected soft tissue(s), mandible (CPT 21040) <input type="number" id="unitCurettageMandible" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planExcisionMaxilla" name="planProcedures" value="Excision of infected bone, maxilla (CPT 21026)" data-units-id="unitExcisionMaxilla"> Excision of infected bone, maxilla (CPT 21026) <input type="number" id="unitExcisionMaxilla" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planExcisionMandible" name="planProcedures" value="Excision of infected bone, mandible (CPT 21025)" data-units-id="unitExcisionMandible"> Excision of infected bone, mandible (CPT 21025) <input type="number" id="unitExcisionMandible" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planAlveoloplasty" name="planProcedures" value="Alveoloplasty, U/L/BI/L quadrant: surgical (CPT 41874)" data-units-id="unitAlveoloplasty"> Alveoloplasty, U/L/BI/L quadrant: surgical (CPT 41874) <input type="number" id="unitAlveoloplasty" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planDefinitiveProsthesis" name="planProcedures" value="Impression and custom preparation: definitive prosthesis (CPT 21080)" data-units-id="unitDefinitiveProsthesis"> Impression and custom preparation: definitive prosthesis (CPT 21080) <input type="number" id="unitDefinitiveProsthesis" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planInterimProsthesis" name="planProcedures" value="Impression and custom preparation: interim prosthesis (CPT 21081)" data-units-id="unitInterimProsthesis"> Impression and custom preparation: interim prosthesis (CPT 21081) <input type="number" id="unitInterimProsthesis" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planAlveolectomy" name="planProcedures" value="Alveolectomy, per site, maxilla (CPT 41850)" data-units-id="unitAlveolectomy"> Alveolectomy, per site, maxilla (CPT 41850) <input type="number" id="unitAlveolectomy" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planImplantRemoval" name="planProcedures" value="Removal of implant, Maxillary deep (CPT 20680)" data-units-id="unitImplantRemoval"> Removal of implant, Maxillary deep (CPT 20680) <input type="number" id="unitImplantRemoval" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planTorusPalatinus" name="planProcedures" value="Excision of maxillary torus palatinus (CPT 21023)" data-units-id="unitTorusPalatinus"> Excision of maxillary torus palatinus (CPT 21023) <input type="number" id="unitTorusPalatinus" min="0" placeholder="units"></label>
+              <label class="procedure-line"><input type="checkbox" id="planTorusMandibularis" name="planProcedures" value="Excision of torus mandibularis (CPT 21031)" data-units-id="unitTorusMandibularis"> Excision of torus mandibularis (CPT 21031) <input type="number" id="unitTorusMandibularis" min="0" placeholder="units"></label>
+            </div>
           </fieldset>
+
           <fieldset>
-            <legend>Adjunctive management</legend>
-            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Medication"> Medication</label>
-            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Physical therapy"> Physical therapy</label>
-            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Behavioral modification"> Behavioral modification</label>
-            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Nutrition counseling"> Nutrition counseling</label>
-            <label class="inline"><input type="checkbox" name="planAdjuncts" value="Sleep hygiene"> Sleep hygiene</label>
+            <legend>Treatment Plan Verification</legend>
+            <label class="inline"><input type="checkbox" name="planVerification" value="Alternatives reviewed"> Alternative management options reviewed</label>
+            <label class="inline"><input type="checkbox" name="planVerification" value="All questions addressed"> All questions addressed</label>
+            <label class="inline"><input type="checkbox" name="planVerification" value="Patient understands plan"> Patient voices understanding of above treatment plan and chooses to proceed with treatment</label>
+            <label class="inline"><input type="checkbox" name="planVerification" value="Necessity discussed"> Necessity for treatment plan discussed in detail with patient</label>
           </fieldset>
-          <label class="full-row">Treatment verification<textarea id="planVerification" required placeholder="Discussed alternatives, patient consent..."></textarea></label>
+
+          <div class="grid two-col full-row">
+            <fieldset data-required-group="existingOcclusal" class="occlusal">
+              <legend>Existing Occlusal Class</legend>
+              <label class="inline"><input type="radio" name="existingOcclusal" value="I"> I</label>
+              <label class="inline"><input type="radio" name="existingOcclusal" value="II"> II</label>
+              <label class="inline"><input type="radio" name="existingOcclusal" value="III"> III</label>
+            </fieldset>
+            <fieldset data-required-group="plannedOcclusal" class="occlusal">
+              <legend>Planned Occlusal Class</legend>
+              <label class="inline"><input type="radio" name="plannedOcclusal" value="I"> I</label>
+              <label class="inline"><input type="radio" name="plannedOcclusal" value="II"> II</label>
+              <label class="inline"><input type="radio" name="plannedOcclusal" value="III"> III</label>
+            </fieldset>
+          </div>
+
+          <label class="full-row">Missing teeth #’s<textarea id="missingTeeth" required placeholder="List missing tooth numbers">1,2,5,13,15,17,19,20,30</textarea></label>
+          <div class="inline-checks full-row">
+            <label class="inline"><input type="checkbox" id="edentulousMaxilla"> Edentulous Maxilla</label>
+            <label class="inline"><input type="checkbox" id="edentulousMandible"> Edentulous Mandible</label>
+          </div>
+
+          <fieldset class="full-row">
+            <legend>Location of Implants</legend>
+            <div class="implant-grid">
+              <div class="implant-row"><label>1. Tooth Number<input id="implantTooth1" type="text"></label><label>Bone Height<input id="implantHeight1" type="text"></label><label>Bone Width<input id="implantWidth1" type="text"></label></div>
+              <div class="implant-row"><label>2. Tooth Number<input id="implantTooth2" type="text"></label><label>Bone Height<input id="implantHeight2" type="text"></label><label>Bone Width<input id="implantWidth2" type="text"></label></div>
+              <div class="implant-row"><label>3. Tooth Number<input id="implantTooth3" type="text"></label><label>Bone Height<input id="implantHeight3" type="text"></label><label>Bone Width<input id="implantWidth3" type="text"></label></div>
+              <div class="implant-row"><label>4. Tooth Number<input id="implantTooth4" type="text"></label><label>Bone Height<input id="implantHeight4" type="text"></label><label>Bone Width<input id="implantWidth4" type="text"></label></div>
+              <div class="implant-row"><label>5. Tooth Number<input id="implantTooth5" type="text"></label><label>Bone Height<input id="implantHeight5" type="text"></label><label>Bone Width<input id="implantWidth5" type="text"></label></div>
+              <div class="implant-row"><label>6. Tooth Number<input id="implantTooth6" type="text"></label><label>Bone Height<input id="implantHeight6" type="text"></label><label>Bone Width<input id="implantWidth6" type="text"></label></div>
+              <div class="implant-row"><label>7. Tooth Number<input id="implantTooth7" type="text"></label><label>Bone Height<input id="implantHeight7" type="text"></label><label>Bone Width<input id="implantWidth7" type="text"></label></div>
+              <div class="implant-row"><label>8. Tooth Number<input id="implantTooth8" type="text"></label><label>Bone Height<input id="implantHeight8" type="text"></label><label>Bone Width<input id="implantWidth8" type="text"></label></div>
+              <div class="implant-row"><label>9. Tooth Number<input id="implantTooth9" type="text"></label><label>Bone Height<input id="implantHeight9" type="text"></label><label>Bone Width<input id="implantWidth9" type="text"></label></div>
+              <div class="implant-row"><label>10. Tooth Number<input id="implantTooth10" type="text"></label><label>Bone Height<input id="implantHeight10" type="text"></label><label>Bone Width<input id="implantWidth10" type="text"></label></div>
+              <div class="implant-row"><label>11. Tooth Number<input id="implantTooth11" type="text"></label><label>Bone Height<input id="implantHeight11" type="text"></label><label>Bone Width<input id="implantWidth11" type="text"></label></div>
+              <div class="implant-row"><label>12. Tooth Number<input id="implantTooth12" type="text"></label><label>Bone Height<input id="implantHeight12" type="text"></label><label>Bone Width<input id="implantWidth12" type="text"></label></div>
+              <div class="implant-row"><label>13. Tooth Number<input id="implantTooth13" type="text"></label><label>Bone Height<input id="implantHeight13" type="text"></label><label>Bone Width<input id="implantWidth13" type="text"></label></div>
+              <div class="implant-row"><label>14. Tooth Number<input id="implantTooth14" type="text"></label><label>Bone Height<input id="implantHeight14" type="text"></label><label>Bone Width<input id="implantWidth14" type="text"></label></div>
+              <div class="implant-row"><label>15. Tooth Number<input id="implantTooth15" type="text"></label><label>Bone Height<input id="implantHeight15" type="text"></label><label>Bone Width<input id="implantWidth15" type="text"></label></div>
+              <div class="implant-row"><label>16. Tooth Number<input id="implantTooth16" type="text"></label><label>Bone Height<input id="implantHeight16" type="text"></label><label>Bone Width<input id="implantWidth16" type="text"></label></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Pterygoid Implants</legend>
+            <div class="grid two-col">
+              <label>Left implant details<input id="pterygoidLeft" type="text" placeholder="Notes on tooth number / dimensions"></label>
+              <label>Right implant details<input id="pterygoidRight" type="text" placeholder="Notes on tooth number / dimensions"></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Zygomatic Implants</legend>
+            <div class="grid two-col">
+              <label>Left implant details<input id="zygomaticLeft" type="text" placeholder="Notes on tooth number / dimensions"></label>
+              <label>Right implant details<input id="zygomaticRight" type="text" placeholder="Notes on tooth number / dimensions"></label>
+            </div>
+          </fieldset>
+
+          <label class="full-row">Additional Notes for Plan
+            <textarea id="planNotes" maxlength="3000" placeholder="Enter additional notes for plan"></textarea>
+            <span class="muted">Max. 3000 Characters</span>
+          </label>
+
+          <p class="full-row">Treatment is medically necessary for clinically significant functional impairment and terminal dentition with documented pain and loss of function. The treatment will provide the ability to select and chew foods normally and increase nutrition and healing.</p>
+
+          <fieldset class="full-row" data-required-group="necessityReasons">
+            <legend>This patient meets medical necessity for treatment of their</legend>
+            <label class="inline"><input type="checkbox" name="necessityReasons" value="infection"> infection</label>
+            <label class="inline"><input type="checkbox" name="necessityReasons" value="atrophy"> atrophy</label>
+            <label class="inline"><input type="checkbox" name="necessityReasons" value="orofacial pain"> orofacial pain</label>
+            <label class="inline"><input type="checkbox" name="necessityReasons" value="terminal dentition"> terminal dentition</label>
+          </fieldset>
+
+          <fieldset class="full-row">
+            <legend>Prognosis for patient is</legend>
+            <label class="inline"><input type="radio" name="planPrognosis" value="Excellent"> Excellent</label>
+            <label class="inline"><input type="radio" name="planPrognosis" value="Good"> Good</label>
+            <label class="inline"><input type="radio" name="planPrognosis" value="Fair"> Fair</label>
+            <label class="inline"><input type="radio" name="planPrognosis" value="Guarded"> Guarded</label>
+          </fieldset>
+
           <label>Follow-up interval<select id="followupInterval" required>
             <option value="">Select</option>
             <option>1 week</option>
@@ -435,14 +530,6 @@
             <option>3 months</option>
             <option>As needed</option>
           </select></label>
-          <label>Prognosis<select id="prognosis" required>
-            <option value="">Select</option>
-            <option>Excellent</option>
-            <option>Good</option>
-            <option>Fair</option>
-            <option>Guarded</option>
-          </select></label>
-          <label class="full-row">Additional notes<textarea id="planNotes" placeholder="Optional"></textarea></label>
         </div>
       </div>
     </section>

@@ -115,6 +115,53 @@ label.inline { display: inline-flex; align-items: center; gap: 6px; margin-right
   margin: 0 0 8px;
 }
 
+.procedure-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.procedure-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.procedure-line input[type="number"] {
+  width: 120px;
+}
+
+.inline-checks {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.implant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px;
+}
+
+.implant-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 8px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+
+.implant-row label {
+  font-weight: 500;
+}
+
+.occlusal label.inline {
+  margin-right: 16px;
+}
+
 .overlay { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); z-index: 20; }
 .overlay.hidden { display: none; }
 

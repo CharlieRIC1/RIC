@@ -8,11 +8,32 @@ const requiredFields = [
   'objectiveInfo', 'objectiveNotes', 'objectiveNotes2', 'periapicalLocation',
   'diagnostics', 'functional', 'imaging',
   'primaryDiagnosis', 'assessment', 'necessity',
-  'planGoals', 'planVerification', 'followupInterval', 'prognosis', 'billingCode',
+  'planGoals', 'followupInterval', 'billingCode', 'planNotes', 'missingTeeth',
+  'unitGraftMaxilla', 'unitGraftMandible', 'unitReconMaxilla', 'unitReconMandible', 'unitCurettageMaxilla', 'unitCurettageMandible', 'unitExcisionMaxilla', 'unitExcisionMandible', 'unitAlveoloplasty', 'unitDefinitiveProsthesis', 'unitInterimProsthesis', 'unitAlveolectomy', 'unitImplantRemoval', 'unitTorusPalatinus', 'unitTorusMandibularis',
+  'implantTooth1', 'implantHeight1', 'implantWidth1', 'implantTooth2', 'implantHeight2', 'implantWidth2', 'implantTooth3', 'implantHeight3', 'implantWidth3', 'implantTooth4', 'implantHeight4', 'implantWidth4', 'implantTooth5', 'implantHeight5', 'implantWidth5', 'implantTooth6', 'implantHeight6', 'implantWidth6', 'implantTooth7', 'implantHeight7', 'implantWidth7', 'implantTooth8', 'implantHeight8', 'implantWidth8', 'implantTooth9', 'implantHeight9', 'implantWidth9', 'implantTooth10', 'implantHeight10', 'implantWidth10', 'implantTooth11', 'implantHeight11', 'implantWidth11', 'implantTooth12', 'implantHeight12', 'implantWidth12', 'implantTooth13', 'implantHeight13', 'implantWidth13', 'implantTooth14', 'implantHeight14', 'implantWidth14', 'implantTooth15', 'implantHeight15', 'implantWidth15', 'implantTooth16', 'implantHeight16', 'implantWidth16',
+  'pterygoidLeft', 'pterygoidRight', 'zygomaticLeft', 'zygomaticRight',
   'cephCompleted', 'panoCompleted', 'cephRecommended', 'panoRecommended',
   'cbctTeethCompleted', 'cbctSinusesCompleted', 'cbctFacialCompleted',
   'cbctTeethRecommended', 'cbctSinusesRecommended', 'cbctFacialRecommended'
 ];
+
+const planUnitMap = {
+  'Bone grafting (includes obtaining graft), maxilla (CPT 21210)': 'unitGraftMaxilla',
+  'Bone grafting (includes obtaining graft), mandible (CPT 21215)': 'unitGraftMandible',
+  'Reconstruction of maxilla, endosteal, complete (CPT 21249)': 'unitReconMaxilla',
+  'Reconstruction of mandible, endosteal, complete (CPT 21246)': 'unitReconMandible',
+  'Curettage of infected soft tissue(s), maxilla (CPT 21060)': 'unitCurettageMaxilla',
+  'Curettage of infected soft tissue(s), mandible (CPT 21040)': 'unitCurettageMandible',
+  'Excision of infected bone, maxilla (CPT 21026)': 'unitExcisionMaxilla',
+  'Excision of infected bone, mandible (CPT 21025)': 'unitExcisionMandible',
+  'Alveoloplasty, U/L/BI/L quadrant: surgical (CPT 41874)': 'unitAlveoloplasty',
+  'Impression and custom preparation: definitive prosthesis (CPT 21080)': 'unitDefinitiveProsthesis',
+  'Impression and custom preparation: interim prosthesis (CPT 21081)': 'unitInterimProsthesis',
+  'Alveolectomy, per site, maxilla (CPT 41850)': 'unitAlveolectomy',
+  'Removal of implant, Maxillary deep (CPT 20680)': 'unitImplantRemoval',
+  'Excision of maxillary torus palatinus (CPT 21023)': 'unitTorusPalatinus',
+  'Excision of torus mandibularis (CPT 21031)': 'unitTorusMandibularis'
+};
 
 const sections = ['subjective', 'objective', 'assessment', 'plan', 'billing'];
 
@@ -59,7 +80,24 @@ function getFormData() {
   data.abscessQuadrant = getCheckedValues('abscessQuadrant');
   data.supportingDiagnosis = getCheckedValues('supportingDiagnosis');
   data.planProcedures = getCheckedValues('planProcedures');
+  data.planVerification = getCheckedValues('planVerification');
+  data.necessityReasons = getCheckedValues('necessityReasons');
   data.planAdjuncts = getCheckedValues('planAdjuncts');
+  data.planProcedureUnits = {};
+  Object.values(planUnitMap).forEach(id => {
+    const el = document.getElementById(id);
+    data.planProcedureUnits[id] = el ? el.value : '';
+  });
+  data.existingOcclusal = getSelectedValue('existingOcclusal');
+  data.plannedOcclusal = getSelectedValue('plannedOcclusal');
+  data.planPrognosis = getSelectedValue('planPrognosis');
+  data.edentulousMaxilla = document.getElementById('edentulousMaxilla').checked;
+  data.edentulousMandible = document.getElementById('edentulousMandible').checked;
+  data.implants = collectImplants();
+  data.pterygoidLeft = document.getElementById('pterygoidLeft').value;
+  data.pterygoidRight = document.getElementById('pterygoidRight').value;
+  data.zygomaticLeft = document.getElementById('zygomaticLeft').value;
+  data.zygomaticRight = document.getElementById('zygomaticRight').value;
   const authNeeded = document.querySelector('input[name="authNeeded"]:checked');
   data.authNeeded = authNeeded ? authNeeded.value : '';
   return data;
@@ -76,7 +114,7 @@ function populateForm(data) {
         el.value = data[key];
       }
     }
-    if (['chiefComplaints', 'onsetMechanism', 'onsetSpeed', 'conservativeTherapies', 'examFinding', 'painQuality', 'painConsistency', 'painExperience', 'dailyDifficulty', 'abscessQuadrant', 'supportingDiagnosis', 'planProcedures', 'planAdjuncts'].includes(key)) {
+    if (['chiefComplaints', 'onsetMechanism', 'onsetSpeed', 'conservativeTherapies', 'examFinding', 'painQuality', 'painConsistency', 'painExperience', 'dailyDifficulty', 'abscessQuadrant', 'supportingDiagnosis', 'planProcedures', 'planAdjuncts', 'planVerification', 'necessityReasons'].includes(key)) {
       document.querySelectorAll(`input[name="${key}"]`).forEach(input => {
         input.checked = Array.isArray(data[key]) && data[key].includes(input.value);
       });
@@ -106,6 +144,20 @@ function populateForm(data) {
     const radio = document.querySelector(`input[name="authNeeded"][value="${data.authNeeded}"]`);
     if (radio) radio.checked = true;
   }
+  if (data.existingOcclusal) {
+    const radio = document.querySelector(`input[name="existingOcclusal"][value="${data.existingOcclusal}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (data.plannedOcclusal) {
+    const radio = document.querySelector(`input[name="plannedOcclusal"][value="${data.plannedOcclusal}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (data.planPrognosis) {
+    const radio = document.querySelector(`input[name="planPrognosis"][value="${data.planPrognosis}"]`);
+    if (radio) radio.checked = true;
+  }
+  document.getElementById('edentulousMaxilla').checked = Boolean(data.edentulousMaxilla);
+  document.getElementById('edentulousMandible').checked = Boolean(data.edentulousMandible);
 }
 
 function saveToLocalStorage() {
@@ -170,6 +222,21 @@ function validateSection(section) {
     const billingCode = document.getElementById('billingCode').value.trim();
     const authNeeded = document.querySelector('input[name="authNeeded"]:checked');
     valid = Boolean(visitType) && attest && billingCode && authNeeded;
+  } else if (section === 'plan') {
+    const goals = document.getElementById('planGoals').value.trim();
+    const followup = document.getElementById('followupInterval').value.trim();
+    const missingTeeth = document.getElementById('missingTeeth').value.trim();
+    const prognosis = getSelectedValue('planPrognosis');
+    const existingOcclusal = getSelectedValue('existingOcclusal');
+    const plannedOcclusal = getSelectedValue('plannedOcclusal');
+    const procedures = Array.from(sectionEl.querySelectorAll('input[name="planProcedures"]:checked'));
+    const necessity = sectionEl.querySelectorAll('input[name="necessityReasons"]:checked').length > 0;
+    const verificationAllChecked = Array.from(sectionEl.querySelectorAll('input[name="planVerification"]')).every(cb => cb.checked);
+    const unitsValid = procedures.every(cb => {
+      const unitInput = document.getElementById(cb.dataset.unitsId);
+      return unitInput && unitInput.value.trim();
+    });
+    valid = Boolean(goals && followup && missingTeeth && prognosis && existingOcclusal && plannedOcclusal && procedures.length && necessity && verificationAllChecked && unitsValid);
   } else {
     const fields = sectionEl.querySelectorAll('[required]');
     fields.forEach(field => {
@@ -218,6 +285,14 @@ function renderPreview() {
   const painExperienceLabel = listOrDash(data.painExperience);
   const dailyDifficultyLabel = listOrDash(data.dailyDifficulty);
   const abscessLabel = listOrDash(data.abscessQuadrant);
+  const planProceduresLabel = formatPlanProcedures(data);
+  const planVerificationLabel = listOrDash(data.planVerification);
+  const necessityLabel = listOrDash(data.necessityReasons);
+  const edentulous = [];
+  if (data.edentulousMaxilla) edentulous.push('Edentulous Maxilla');
+  if (data.edentulousMandible) edentulous.push('Edentulous Mandible');
+  const edentulousLabel = edentulous.length ? edentulous.join(', ') : '—';
+  const implantsLabel = formatImplants(data.implants);
   const records = [
     formatRecord('Cephalogram (CPT 70350)', data.cephCompleted, data.cephRecommended),
     formatRecord('Orthopantomagram (CPT 70355)', data.panoCompleted, data.panoRecommended),
@@ -291,11 +366,17 @@ function renderPreview() {
       <div>
         <h4>Plan</h4>
         <p><strong>Goals</strong><br>${data.planGoals || '—'}</p>
-        <p><strong>Procedures</strong><br>${listOrDash(data.planProcedures)}</p>
-        <p><strong>Adjuncts</strong><br>${listOrDash(data.planAdjuncts)}</p>
-        <p><strong>Verification</strong><br>${data.planVerification || '—'}</p>
+        <p><strong>Procedures</strong><br>${planProceduresLabel}</p>
+        <p><strong>Verification</strong><br>${planVerificationLabel}</p>
+        <p><strong>Occlusal Class</strong><br>Existing: ${data.existingOcclusal || '—'} | Planned: ${data.plannedOcclusal || '—'}</p>
+        <p><strong>Missing teeth</strong><br>${data.missingTeeth || '—'}</p>
+        <p><strong>Edentulous</strong><br>${edentulousLabel}</p>
+        <p><strong>Implant plan</strong><br>${implantsLabel}</p>
+        <p><strong>Pterygoid implants</strong><br>${data.pterygoidLeft || '—'}<br>${data.pterygoidRight || '—'}</p>
+        <p><strong>Zygomatic implants</strong><br>${data.zygomaticLeft || '—'}<br>${data.zygomaticRight || '—'}</p>
+        <p><strong>Medical necessity</strong><br>${necessityLabel}</p>
         <p><strong>Follow-up</strong><br>${data.followupInterval || '—'}</p>
-        <p><strong>Prognosis</strong><br>${data.prognosis || '—'}</p>
+        <p><strong>Prognosis</strong><br>${data.planPrognosis || '—'}</p>
         <p><strong>Notes</strong><br>${data.planNotes || '—'}</p>
         <p><strong>Addendum</strong><br>${data.addendum || '—'}</p>
       </div>
@@ -363,6 +444,11 @@ function getCheckedValues(name) {
   return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(input => input.value);
 }
 
+function getSelectedValue(name) {
+  const radio = document.querySelector(`input[name="${name}"]:checked`);
+  return radio ? radio.value : '';
+}
+
 function syncPainScoreLabel() {
   const slider = document.getElementById('painScore');
   if (slider) {
@@ -375,4 +461,31 @@ function formatRecord(label, completed, recommended) {
   if (completed) status.push('Completed');
   if (recommended) status.push('Recommended');
   return `${label}: ${status.length ? status.join(', ') : '—'}`;
+}
+
+function formatPlanProcedures(data) {
+  if (!data.planProcedures || !data.planProcedures.length) return '—';
+  return data.planProcedures.map(label => {
+    const unitId = planUnitMap[label];
+    const units = data.planProcedureUnits ? data.planProcedureUnits[unitId] : '';
+    return units ? `${label} — ${units} units` : label;
+  }).join('<br>');
+}
+
+function collectImplants() {
+  const implants = [];
+  for (let i = 1; i <= 16; i += 1) {
+    const tooth = document.getElementById(`implantTooth${i}`).value;
+    const height = document.getElementById(`implantHeight${i}`).value;
+    const width = document.getElementById(`implantWidth${i}`).value;
+    if (tooth || height || width) {
+      implants.push({ index: i, tooth, height, width });
+    }
+  }
+  return implants;
+}
+
+function formatImplants(implants) {
+  if (!implants || !implants.length) return '—';
+  return implants.map(item => `#${item.tooth || item.index}: Height ${item.height || '—'} / Width ${item.width || '—'}`).join('<br>');
 }
