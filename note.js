@@ -1,7 +1,7 @@
 const demoUser = { username: 'provider', password: 'care' };
 const requiredFields = [
   'patientName', 'patientDob', 'dateOfService', 'timeOfService', 'mrn', 'location', 'referring', 'supervising',
-  'chiefComplaint', 'hpi', 'psh', 'symptomDurationYears', 'painScore',
+  'symptomDurationYears', 'painScore', 'chronicPainYears', 'conservativeDuration',
   'bp', 'heartRate', 'spo2', 'diagnostics', 'functional', 'imaging',
   'primaryDiagnosis', 'assessment', 'necessity',
   'planGoals', 'planVerification', 'followupInterval', 'prognosis', 'billingCode'
@@ -28,10 +28,16 @@ function getFormData() {
   data.visitType = visitType ? visitType.value : '';
   const painPattern = document.querySelector('input[name="painPattern"]:checked');
   data.painPattern = painPattern ? painPattern.value : '';
+  const symptomCourse = document.querySelector('input[name="symptomCourse"]:checked');
+  data.symptomCourse = symptomCourse ? symptomCourse.value : '';
+  const symptomStatus = document.querySelector('input[name="symptomStatus"]:checked');
+  data.symptomStatus = symptomStatus ? symptomStatus.value : '';
   data.addendum = document.getElementById('addendum').value || '';
   data.attest = document.getElementById('attest').checked;
-  data.symptoms = getCheckedValues('symptoms');
-  data.symptomOther = document.getElementById('symptomOther').value || '';
+  data.chiefComplaints = getCheckedValues('chiefComplaints');
+  data.onsetMechanism = getCheckedValues('onsetMechanism');
+  data.onsetSpeed = getCheckedValues('onsetSpeed');
+  data.conservativeTherapies = getCheckedValues('conservativeTherapies');
   data.examFinding = getCheckedValues('examFinding');
   data.supportingDiagnosis = getCheckedValues('supportingDiagnosis');
   data.planProcedures = getCheckedValues('planProcedures');
@@ -52,7 +58,7 @@ function populateForm(data) {
         el.value = data[key];
       }
     }
-    if (['symptoms', 'examFinding', 'supportingDiagnosis', 'planProcedures', 'planAdjuncts'].includes(key)) {
+    if (['chiefComplaints', 'onsetMechanism', 'onsetSpeed', 'conservativeTherapies', 'examFinding', 'supportingDiagnosis', 'planProcedures', 'planAdjuncts'].includes(key)) {
       document.querySelectorAll(`input[name="${key}"]`).forEach(input => {
         input.checked = Array.isArray(data[key]) && data[key].includes(input.value);
       });
@@ -64,6 +70,14 @@ function populateForm(data) {
   }
   if (data.painPattern) {
     const radio = document.querySelector(`input[name="painPattern"][value="${data.painPattern}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (data.symptomCourse) {
+    const radio = document.querySelector(`input[name="symptomCourse"][value="${data.symptomCourse}"]`);
+    if (radio) radio.checked = true;
+  }
+  if (data.symptomStatus) {
+    const radio = document.querySelector(`input[name="symptomStatus"][value="${data.symptomStatus}"]`);
     if (radio) radio.checked = true;
   }
   if (data.authNeeded) {
@@ -202,13 +216,17 @@ function renderPreview() {
     <div class="preview-columns">
       <div>
         <h4>Subjective</h4>
-        <p><strong>Chief Complaint</strong><br>${data.chiefComplaint || '—'}</p>
-        <p><strong>HPI</strong><br>${data.hpi || '—'}</p>
-        <p><strong>Past Surgical History</strong><br>${data.psh || '—'}</p>
-        <p><strong>Symptoms</strong><br>${listOrDash(data.symptoms)}</p>
+        <p><strong>Chief complaints</strong><br>${listOrDash(data.chiefComplaints)}</p>
         <p><strong>Symptom duration</strong><br>${data.symptomDurationYears || '0'} years ${data.symptomDurationMonths || '0'} months</p>
+        <p><strong>Onset of symptoms</strong><br>${listOrDash(data.onsetMechanism)}</p>
+        <p><strong>Onset speed</strong><br>${listOrDash(data.onsetSpeed)}</p>
+        <p><strong>Course</strong><br>${data.symptomCourse || '—'}</p>
+        <p><strong>Current status</strong><br>${data.symptomStatus || '—'}</p>
         <p><strong>Pain severity</strong><br>${data.painScore || '—'}/10 (${painPatternLabel})</p>
-        <p><strong>Symptom notes</strong><br>${data.symptomNotes || data.symptomOther || '—'}</p>
+        <p><strong>Chronic pain duration</strong><br>${data.chronicPainYears || '0'} years ${data.chronicPainMonths || '0'} months</p>
+        <p><strong>Conservative therapies</strong><br>${listOrDash(data.conservativeTherapies)}</p>
+        <p><strong>Therapies duration</strong><br>${data.conservativeDuration || '—'}</p>
+        <p><strong>Subjective notes</strong><br>${data.symptomNotes || '—'}</p>
       </div>
       <div>
         <h4>Objective</h4>
@@ -264,8 +282,8 @@ function bindFormListeners() {
 (function bootstrap() {
   handleAccordion();
   bindFormListeners();
-      renderPreview();
-      validateAllSections();
+  renderPreview();
+  validateAllSections();
 
   if (localStorage.getItem('ric-auth') === 'true') {
     loginGate.classList.add('hidden');

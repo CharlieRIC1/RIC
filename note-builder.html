@@ -75,39 +75,94 @@
       </header>
       <div class="accordion-body">
         <div class="grid two-col">
-          <label>Chief Complaint<textarea id="chiefComplaint" required placeholder="Patient reports..."></textarea></label>
-          <label>History of Present Illness<textarea id="hpi" required placeholder="Duration, triggers, prior treatments..."></textarea></label>
-          <label>Past Surgical History<textarea id="psh" required placeholder="Relevant surgeries"></textarea></label>
-          <fieldset data-required-group="symptoms">
-            <legend>Symptom checklist (select all that apply)</legend>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Pain"> Pain</label>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Swelling"> Swelling</label>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Limited opening"> Limited opening</label>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Clicking / popping"> Clicking / popping</label>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Locking episodes"> Locking episodes</label>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Headaches"> Headaches</label>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Ear pain / fullness"> Ear pain / fullness</label>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Numbness / tingling"> Numbness / tingling</label>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Fatigue"> Fatigue</label>
-            <label class="inline"><input type="checkbox" name="symptoms" value="Other"> Other</label>
-            <label class="full-row">If "Other", describe<textarea id="symptomOther" placeholder="Optional"></textarea></label>
+          <fieldset class="full-row" data-required-group="chiefComplaints">
+            <legend>Chief Complaints (select all that pertain to patient)</legend>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Orofacial pain"> Orofacial pain</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Sinus infections"> Sinus infections</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Pain behind/around eyes"> Pain behind/around eyes</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Swollen/painful face"> Swollen/painful face</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Head pain"> Head pain</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Migraines"> Migraines</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Jaw pain"> Jaw pain</label>
+            <label class="inline"><input type="checkbox" name="chiefComplaints" value="Intraoral infection/abscess"> Intraoral infection/abscess</label>
           </fieldset>
+
           <div class="grid two-col">
-            <label>Duration (years)<input required id="symptomDurationYears" type="number" min="0" placeholder="e.g., 1"></label>
-            <label>Duration (months)<input id="symptomDurationMonths" type="number" min="0" max="11" placeholder="0-11"></label>
+            <label>Current symptoms present for (years)
+              <input required id="symptomDurationYears" type="number" min="0" placeholder="e.g., 2">
+            </label>
+            <label>Current symptoms present for (months)
+              <input id="symptomDurationMonths" type="number" min="0" max="11" placeholder="0-11">
+            </label>
           </div>
-          <label>Pain severity (0-10)
-            <input required id="painScore" type="range" min="0" max="10" value="0">
-            <span class="muted" id="painScoreValue">0/10</span>
-          </label>
-          <fieldset data-required-group="painPattern">
-            <legend>Pain pattern</legend>
-            <label class="inline"><input type="radio" name="painPattern" value="Intermittent"> Intermittent</label>
-            <label class="inline"><input type="radio" name="painPattern" value="Constant"> Constant</label>
-            <label class="inline"><input type="radio" name="painPattern" value="Post-operative"> Post-operative</label>
-            <label class="inline"><input type="radio" name="painPattern" value="None"> None</label>
+
+          <fieldset data-required-group="onsetMechanism">
+            <legend>Onset of symptoms</legend>
+            <label class="inline"><input type="checkbox" name="onsetMechanism" value="Gradual"> Gradual</label>
+            <label class="inline"><input type="checkbox" name="onsetMechanism" value="Trauma related"> Trauma related</label>
           </fieldset>
-          <label class="full-row">Symptom notes<textarea id="symptomNotes" placeholder="Optional"></textarea></label>
+
+          <fieldset data-required-group="onsetSpeed">
+            <legend>Onset speed</legend>
+            <label class="inline"><input type="checkbox" name="onsetSpeed" value="Gradual"> Gradual</label>
+            <label class="inline"><input type="checkbox" name="onsetSpeed" value="Abrupt"> Abrupt</label>
+            <label class="inline"><input type="checkbox" name="onsetSpeed" value="Rapid"> Rapid</label>
+            <label class="inline"><input type="checkbox" name="onsetSpeed" value="Following infection"> Following infection</label>
+          </fieldset>
+
+          <fieldset data-required-group="symptomCourse">
+            <legend>Progress over course of disease</legend>
+            <label class="inline"><input type="radio" name="symptomCourse" value="Progressively worsened"> Progressively worsened</label>
+            <label class="inline"><input type="radio" name="symptomCourse" value="Remained constant"> Remained constant</label>
+            <label class="inline"><input type="radio" name="symptomCourse" value="Escalated significantly over last couple weeks"> Escalated significantly over last couple weeks</label>
+          </fieldset>
+
+          <fieldset data-required-group="symptomStatus">
+            <legend>Current status of symptoms</legend>
+            <label class="inline"><input type="radio" name="symptomStatus" value="Stable in severity"> Stable in severity</label>
+            <label class="inline"><input type="radio" name="symptomStatus" value="Somewhat worse"> Somewhat worse</label>
+            <label class="inline"><input type="radio" name="symptomStatus" value="Significantly worse"> Significantly worse</label>
+            <label class="inline"><input type="radio" name="symptomStatus" value="At maximal severity"> At maximal severity</label>
+          </fieldset>
+
+          <div class="grid two-col">
+            <label>Pain severity (0-10)
+              <input required id="painScore" type="range" min="0" max="10" value="0">
+              <span class="muted" id="painScoreValue">0/10</span>
+            </label>
+            <fieldset data-required-group="painPattern">
+              <legend>Pain pattern</legend>
+              <label class="inline"><input type="radio" name="painPattern" value="Intermittent"> Intermittent</label>
+              <label class="inline"><input type="radio" name="painPattern" value="Constant"> Constant</label>
+              <label class="inline"><input type="radio" name="painPattern" value="Post-operative"> Post-operative</label>
+              <label class="inline"><input type="radio" name="painPattern" value="None"> None</label>
+            </fieldset>
+          </div>
+
+          <div class="grid two-col">
+            <label>Pain is chronic and has been present more than (years)
+              <input required id="chronicPainYears" type="number" min="0" placeholder="e.g., 2">
+            </label>
+            <label>Pain is chronic and has been present more than (months)
+              <input id="chronicPainMonths" type="number" min="0" max="11" placeholder="0-11">
+            </label>
+          </div>
+
+          <fieldset data-required-group="conservativeTherapies" class="full-row">
+            <legend>Conservative Therapies Attempted</legend>
+            <label class="inline"><input type="checkbox" name="conservativeTherapies" value="Soft/Liquid Diet"> Soft/Liquid Diet</label>
+            <label class="inline"><input type="checkbox" name="conservativeTherapies" value="RX Pain Medications"> RX Pain Medications</label>
+            <label class="inline"><input type="checkbox" name="conservativeTherapies" value="OTC Medications"> OTC Medications</label>
+            <label class="inline"><input type="checkbox" name="conservativeTherapies" value="Antibiotic Therapy"> Antibiotic Therapy</label>
+          </fieldset>
+
+          <label class="full-row">Conservative therapies attempted for how long?
+            <input required id="conservativeDuration" placeholder="e.g., 2 years">
+          </label>
+
+          <label class="full-row">Additional Notes for Subjective (max 3000 characters)
+            <textarea id="symptomNotes" maxlength="3000" placeholder="Enter additional notes for Subjective"></textarea>
+          </label>
         </div>
       </div>
     </section>
